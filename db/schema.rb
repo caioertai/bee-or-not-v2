@@ -10,7 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_05_221154) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_05_225558) do
+  create_table "games", force: :cascade do |t|
+    t.integer "score", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "headlines", force: :cascade do |t|
     t.string "content", null: false
     t.boolean "real", null: false
@@ -18,4 +24,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_05_221154) do
     t.datetime "updated_at", null: false
     t.index ["real"], name: "index_headlines_on_real"
   end
+
+  create_table "rounds", force: :cascade do |t|
+    t.integer "game_id", null: false
+    t.integer "headline_id", null: false
+    t.string "user_guess", null: false
+    t.boolean "correct", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["game_id", "created_at"], name: "index_rounds_on_game_id_and_created_at"
+    t.index ["game_id"], name: "index_rounds_on_game_id"
+    t.index ["headline_id"], name: "index_rounds_on_headline_id"
+  end
+
+  add_foreign_key "rounds", "games"
+  add_foreign_key "rounds", "headlines"
 end

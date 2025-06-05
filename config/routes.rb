@@ -14,10 +14,6 @@ Rails.application.routes.draw do
 
   # Game routes with nested rounds
   resources :games, only: [ :new, :create, :show ] do
-    resource :current_round, only: [ :show ] do
-      member do
-        patch :guess
-      end
-    end
+    resources :rounds, only: [ :new, :create, :show ]
   end
 end

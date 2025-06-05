@@ -1,43 +1,59 @@
 require "test_helper"
 
 class GameTest < ActiveSupport::TestCase
-  test "create should generate a game with default values" do
-    game = Game.create
-
-    assert_not_nil game.id
+  test "should be valid with default score" do
+    game = Game.new
+    assert game.valid?
     assert_equal 0, game.score
-    assert_equal 0, game.total_rounds
-    assert_not_nil game.created_at
   end
 
-  test "increment_score! should increase score by 1" do
-    game = Game.create
-    new_game = game.increment_score!
-
-    assert_equal 1, new_game.score
-    assert_equal game.total_rounds, new_game.total_rounds
+  test "should have many rounds" do
+    game = games(:active_game)
+    assert_respond_to game, :rounds
+    assert game.rounds.count > 0
   end
 
-  test "increment_rounds! should increase total_rounds by 1" do
-    game = Game.create
-    new_game = game.increment_rounds!
-
-    assert_equal game.score, new_game.score
-    assert_equal 1, new_game.total_rounds
+  test "total_rounds should return count of rounds" do
+    game = games(:active_game)
+    assert_equal game.rounds.count, game.total_rounds
   end
 
-  test "accuracy_percentage should return 0 for no rounds" do
-    game = Game.create
-    assert_equal 0, game.accuracy_percentage
+  test "correct_rounds should return count of correct rounds" do
+    game = games(:active_game)
+    expected_correct = game.rounds.where(correct: true).count
+    assert_equal expected_correct, game.correct_rounds
   end
 
   test "accuracy_percentage should calculate correctly" do
-    game = Game.new(id: "test", score: 3, total_rounds: 4, created_at: Time.current)
-    assert_equal 75.0, game.accuracy_percentage
+    game = games(:active_game)
+    total = game.total_rounds
+    correct = game.correct_rounds
+
+    if total > 0
+      expected = (correct.to_f / total * 100).round(1)
+      assert_equal expected, game.accuracy_percentage
+    else
+      assert_equal 0, game.accuracy_percentage
+    end
   end
 
-  test "accuracy_percentage should handle perfect score" do
-    game = Game.new(id: "test", score: 5, total_rounds: 5, created_at: Time.current)
-    assert_equal 100.0, game.accuracy_percentage
+  test "accuracy_percentage should return 0 for no rounds" do
+    game = games(:new_game)
+    assert_equal 0, game.accuracy_percentage
+  end
+
+  test "current_round should return a new round" do
+    game = games(:new_game)
+    round = game.current_round
+    assert_instance_of Round, round
+    assert round.new_record?
+    assert_equal game, round.game
+  end
+
+  test "increment_score! should increase score by 1" do
+    game = games(:new_game)
+    original_score = game.score
+    game.increment_score!
+    assert_equal original_score + 1, game.reload.score
   end
 end

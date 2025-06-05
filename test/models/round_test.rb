@@ -1,88 +1,86 @@
 require "test_helper"
 
 class RoundTest < ActiveSupport::TestCase
-  test "create_for_game should create a round with headline" do
-    round = Round.create_for_game("test-game-id")
-
-    assert_not_nil round.id
-    assert_equal "test-game-id", round.game_id
-    assert_not_nil round.headline
+  test "should belong to game and headline" do
+    round = rounds(:correct_real_guess)
+    assert_respond_to round, :game
+    assert_respond_to round, :headline
+    assert_instance_of Game, round.game
     assert_instance_of Headline, round.headline
-    assert_nil round.user_guess
-    assert_nil round.correct
-    assert_nil round.completed_at
   end
 
-  test "make_guess should mark correct guess for real headline" do
-    headline = headlines(:real_headline)
-    round = Round.new(id: "test", game_id: "game", headline: headline, user_guess: nil, correct: nil, completed_at: nil)
+  test "should validate user_guess presence and inclusion" do
+    round = Round.new(game: games(:new_game), headline: headlines(:real_headline))
 
-    result_round = round.make_guess("real")
+    # Should require user_guess
+    assert_not round.valid?
+    assert_includes round.errors[:user_guess], "can't be blank"
 
-    assert_equal "real", result_round.user_guess
-    assert result_round.correct
-    assert_not_nil result_round.completed_at
+    # Should only allow 'real' or 'fake'
+    round.user_guess = "invalid"
+    assert_not round.valid?
+    assert_includes round.errors[:user_guess], "is not included in the list"
+
+    # Should be valid with correct values
+    round.user_guess = "real"
+    assert round.valid?
   end
 
-  test "make_guess should mark incorrect guess for real headline" do
-    headline = headlines(:real_headline)
-    round = Round.new(id: "test", game_id: "game", headline: headline, user_guess: nil, correct: nil, completed_at: nil)
+  test "should calculate correctness before save" do
+    game = games(:new_game)
+    real_headline = headlines(:real_headline)
+    fake_headline = headlines(:fake_headline)
 
-    result_round = round.make_guess("fake")
+    # Correct guess for real headline
+    correct_real = Round.new(game: game, headline: real_headline, user_guess: "real")
+    correct_real.save!
+    assert correct_real.correct?
 
-    assert_equal "fake", result_round.user_guess
-    assert_not result_round.correct
-    assert_not_nil result_round.completed_at
+    # Incorrect guess for real headline
+    incorrect_real = Round.new(game: game, headline: real_headline, user_guess: "fake")
+    incorrect_real.save!
+    assert_not incorrect_real.correct?
+
+    # Correct guess for fake headline
+    correct_fake = Round.new(game: game, headline: fake_headline, user_guess: "fake")
+    correct_fake.save!
+    assert correct_fake.correct?
+
+    # Incorrect guess for fake headline
+    incorrect_fake = Round.new(game: game, headline: fake_headline, user_guess: "real")
+    incorrect_fake.save!
+    assert_not incorrect_fake.correct?
   end
 
-  test "make_guess should mark correct guess for fake headline" do
-    headline = headlines(:fake_headline)
-    round = Round.new(id: "test", game_id: "game", headline: headline, user_guess: nil, correct: nil, completed_at: nil)
-
-    result_round = round.make_guess("fake")
-
-    assert_equal "fake", result_round.user_guess
-    assert result_round.correct
-    assert_not_nil result_round.completed_at
-  end
-
-  test "completed? should return false for incomplete round" do
-    round = Round.new(id: "test", game_id: "game", headline: headlines(:real_headline), user_guess: nil, correct: nil, completed_at: nil)
-    assert_not round.completed?
-  end
-
-  test "completed? should return true for completed round" do
-    round = Round.new(id: "test", game_id: "game", headline: headlines(:real_headline), user_guess: "real", correct: true, completed_at: Time.current)
-    assert round.completed?
-  end
-
-  test "guess_text should capitalize user guess" do
-    round = Round.new(id: "test", game_id: "game", headline: headlines(:real_headline), user_guess: "real", correct: nil, completed_at: nil)
+  test "guess_text should capitalize user_guess" do
+    round = rounds(:correct_real_guess)
     assert_equal "Real", round.guess_text
   end
 
-  test "result_text should return empty for incomplete round" do
-    round = Round.new(id: "test", game_id: "game", headline: headlines(:real_headline), user_guess: nil, correct: nil, completed_at: nil)
-    assert_equal "", round.result_text
-  end
+  test "result_text should return appropriate message" do
+    correct_round = rounds(:correct_real_guess)
+    assert_includes correct_round.result_text, "Correct! This headline was real."
 
-  test "result_text should return correct message for correct guess" do
-    headline = headlines(:real_headline)
-    round = Round.new(id: "test", game_id: "game", headline: headline, user_guess: "real", correct: true, completed_at: Time.current)
-    assert_includes round.result_text, "Correct! This headline was real."
-  end
-
-  test "result_text should return wrong message for incorrect guess" do
-    headline = headlines(:real_headline)
-    round = Round.new(id: "test", game_id: "game", headline: headline, user_guess: "fake", correct: false, completed_at: Time.current)
-    assert_includes round.result_text, "Wrong! This headline was actually real."
+    incorrect_round = rounds(:incorrect_real_guess)
+    assert_includes incorrect_round.result_text, "Wrong! This headline was actually real."
   end
 
   test "result_class should return appropriate CSS class" do
-    correct_round = Round.new(id: "test", game_id: "game", headline: headlines(:real_headline), user_guess: "real", correct: true, completed_at: Time.current)
+    correct_round = rounds(:correct_real_guess)
     assert_equal "text-green-600", correct_round.result_class
 
-    incorrect_round = Round.new(id: "test", game_id: "game", headline: headlines(:real_headline), user_guess: "fake", correct: false, completed_at: Time.current)
+    incorrect_round = rounds(:incorrect_real_guess)
     assert_equal "text-red-600", incorrect_round.result_class
+  end
+
+  test "scopes should work correctly" do
+    game = games(:active_game)
+    total_rounds = game.rounds.count
+    correct_count = game.rounds.correct.count
+    incorrect_count = game.rounds.incorrect.count
+
+    assert_equal total_rounds, correct_count + incorrect_count
+    assert correct_count > 0  # Based on our fixtures
+    assert incorrect_count > 0  # Based on our fixtures
   end
 end

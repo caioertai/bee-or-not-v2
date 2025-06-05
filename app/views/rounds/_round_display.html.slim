@@ -4,17 +4,18 @@
     p.text-gray-600 Is this headline REAL or FAKE?
   
   .mb-8.p-6.bg-gray-50.rounded-lg.border-l-4.border-blue-500
-    p.text-lg.leading-relaxed.text-gray-800.font-medium = round.headline.content
+    p.text-lg.leading-relaxed.text-gray-800.font-medium = headline.content
   
   .space-y-4
-    = form_with url: guess_game_current_round_path(game.id), method: :patch, local: true, data: { turbo: true } do |f|
+    = form_with model: [ game, round ], local: true, data: { turbo: true } do |f|
+      = f.hidden_field :headline_id, value: headline.id
       .grid.grid-cols-1.md:grid-cols-2.gap-4
-        = f.button type: :submit, name: :guess, value: "real", 
+        = f.button type: :submit, name: :user_guess, value: "real", 
                    class: "w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-lg transition-colors duration-200 text-lg flex items-center justify-center space-x-2" do
           span.text-2xl ✅
           span REAL
         
-        = f.button type: :submit, name: :guess, value: "fake",
+        = f.button type: :submit, name: :user_guess, value: "fake",
                    class: "w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-6 rounded-lg transition-colors duration-200 text-lg flex items-center justify-center space-x-2" do
           span.text-2xl ❌
           span FAKE
