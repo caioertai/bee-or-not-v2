@@ -11,4 +11,13 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root "home#index"
+
+  # Game routes with nested rounds
+  resources :games, only: [ :new, :create, :show ] do
+    resource :current_round, only: [ :show ] do
+      member do
+        patch :guess
+      end
+    end
+  end
 end

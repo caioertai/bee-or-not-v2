@@ -1,7 +1,8 @@
-.min-h-screen.bg-gradient-to-br.from-blue-50.to-indigo-100.flex.items-center.justify-center
-  .text-center
+.min-h-screen.bg-gradient-to-br.from-blue-50.to-indigo-100.flex.items-center.justify-center.px-4
+  .text-center.max-w-lg.mx-auto
     h1.text-6xl.font-bold.text-gray-900.mb-4 🐝 Bee or Not v2
-    p.text-xl.text-gray-600.mb-8 A new iteration of the news authenticity game
-    .bg-white.rounded-lg.shadow-lg.p-6.inline-block
-      p.text-gray-700 Welcome to the development environment!
-      p.text-sm.text-gray-500.mt-2 Built with Rails #{Rails.version} and Tailwind CSS
+    p.text-xl.text-gray-600.mb-8 Test your ability to spot real vs. fake headlines
+    .bg-white.rounded-lg.shadow-lg.p-8
+      p.text-gray-700.mb-6 Can you tell the difference between real news and fake headlines?
+      = link_to "Start Playing", new_game_path, class: "inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 text-lg"
+      p.text-sm.text-gray-500.mt-4 Built with Rails #{Rails.version} and Tailwind CSS

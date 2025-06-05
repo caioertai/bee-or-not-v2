@@ -1,0 +1,29 @@
+.min-h-screen.bg-gradient-to-br.from-blue-50.to-indigo-100.flex.items-center.justify-center.px-4
+  .max-w-lg.mx-auto.text-center
+    .bg-white.rounded-lg.shadow-lg.p-8
+      .text-6xl.mb-6 🎯
+      h1.text-3xl.font-bold.text-gray-900.mb-6 Game Complete!
+      
+      .mb-8.space-y-4
+        .bg-blue-50.rounded-lg.p-6
+          .text-3xl.font-bold.text-blue-600.mb-2 = @game.score
+          .text-lg.text-blue-800 out of #{@game.total_rounds} correct
+          .text-2xl.font-bold.text-blue-600.mt-2 #{@game.accuracy_percentage}%
+          .text-sm.text-blue-600 accuracy
+        
+        - if @game.accuracy_percentage >= 80
+          .text-green-600.font-semibold 🏆 Excellent! You're great at spotting fake news!
+        - elsif @game.accuracy_percentage >= 60
+          .text-yellow-600.font-semibold 👍 Good job! Keep practicing to improve your skills.
+        - else
+          .text-red-600.font-semibold 🤔 Keep practicing! Fake news detection takes time to master.
+      
+      .space-y-4
+        = link_to "Play Again", new_game_path, 
+                  class: "block w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 text-lg"
+        
+        = link_to "← Back to Home", root_path, 
+                  class: "block w-full border-2 border-gray-300 hover:border-gray-400 text-gray-700 font-bold py-3 px-6 rounded-lg transition-colors duration-200"
+      
+      .mt-6.text-sm.text-gray-500
+        p Played with #{@total_headlines} available headlines
