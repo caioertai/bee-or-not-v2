@@ -3,7 +3,7 @@
     / Game Stats Header
     #game-stats
       = render "games/stats", game: @game
-    
+
     / Round Content
     #round-content
-      = render "round_display", round: @current_round, guess: @guess, game: @game
+      = render "round_display", guess: @guess, game: @game
