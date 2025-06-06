@@ -77,14 +77,15 @@ bin/brakeman                # Security vulnerability scanning
 
 ### Database Setup
 
-The application includes seed data with 10 curated headlines (5 real from Reuters, 5 fake from Babylon Bee):
+The application includes seed data with 10 curated headlines (5 real from Not the Bee, 5 fake from Babylon Bee):
 
 ```bash
 # Reset and seed the database
 bin/rails db:reset
 
-# Scrape fresh Babylon Bee headlines
-bin/rails scraper:babylon_bee
+# Scrape fresh headlines
+bin/rails scraper:babylon_bee  # Satirical headlines
+bin/rails scraper:not_the_bee  # Real news headlines
 ```
 
 ## 🏗️ Architecture
@@ -95,7 +96,7 @@ bin/rails scraper:babylon_bee
 - **Round**: Individual headline presentation with associated guesses
 - **Guess**: User's decision (real/fake) with correctness calculation
 - **Headline**: News content with real/fake classification and source URL
-- **Source**: News publication metadata (Reuters, Babylon Bee, etc.)
+- **Source**: News publication metadata (Not the Bee, Babylon Bee, etc.)
 
 ### Key Design Decisions
 
@@ -133,7 +134,7 @@ kamal deploy
 
 - [x] **~~Fix Source URLs~~**: ✅ Implemented source_url database field with proper validation
 - [x] **~~Source Management~~**: ✅ Added Source model with proper associations and constraints
-- [x] **~~Automated Content~~**: ✅ Babylon Bee scraper for fresh satirical headlines
+- [x] **~~Automated Content~~**: ✅ Babylon Bee and Not the Bee scrapers for fresh headlines
 
 ### Near-term Improvements
 
@@ -171,7 +172,7 @@ kamal deploy
 
 ### Technical Enhancements
 
-- [ ] **Scraper Configuration**: Move hardcoded URLs to Rails configuration files
+- [x] **~~Scraper Configuration~~**: ✅ Added YAML configuration pattern with base scraper class
 - [ ] **API Monitoring**: Track Babylon Bee API changes and health
 - [ ] **Real-time Multiplayer**: WebSocket-based multiplayer games
 - [ ] **Mobile App**: React Native or PWA implementation
