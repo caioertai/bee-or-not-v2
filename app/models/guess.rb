@@ -1,11 +1,8 @@
 class Guess < ApplicationRecord
   belongs_to :round
+  has_one :game, through: :round
 
   validates :real, inclusion: { in: [ true, false ] }
-
-  def game
-    round.game
-  end
 
   def guess_text
     real? ? "Real" : "Fake"
