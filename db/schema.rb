@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_06_180805) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_06_192410) do
+  create_table "game_players", force: :cascade do |t|
+    t.integer "game_id", null: false
+    t.integer "player_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["game_id"], name: "index_game_players_on_game_id"
+    t.index ["player_id"], name: "index_game_players_on_player_id"
+  end
+
   create_table "games", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -36,6 +45,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_06_180805) do
     t.index ["source_id"], name: "index_headlines_on_source_id"
   end
 
+  create_table "players", force: :cascade do |t|
+    t.string "uuid"
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["uuid"], name: "index_players_on_uuid", unique: true
+  end
+
   create_table "rounds", force: :cascade do |t|
     t.integer "game_id", null: false
     t.integer "headline_id", null: false
@@ -55,6 +72,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_06_180805) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "game_players", "games"
+  add_foreign_key "game_players", "players"
   add_foreign_key "guesses", "rounds"
   add_foreign_key "headlines", "sources"
   add_foreign_key "rounds", "games"

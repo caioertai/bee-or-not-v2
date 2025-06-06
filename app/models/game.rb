@@ -1,6 +1,8 @@
 class Game < ApplicationRecord
   has_many :rounds, dependent: :destroy
   has_many :guesses, through: :rounds
+  has_many :game_players, dependent: :destroy
+  has_many :players, through: :game_players
   has_one :current_round, -> { where.missing(:guesses).order(:created_at) }, class_name: "Round", inverse_of: :game
   def available_headlines
     Headline.where.not(id: rounds.select(:headline_id))
@@ -37,5 +39,17 @@ class Game < ApplicationRecord
 
   def completed?
     available_headlines.empty?
+  end
+
+  def join_url
+    Rails.application.routes.url_helpers.new_game_player_url(self, host: Rails.application.config.action_mailer.default_url_options[:host] || "localhost:3000")
+  end
+
+  def qr_code
+    GameQrCode.new(self).svg
+  end
+
+  def add_player!(player)
+    game_players.find_or_create_by!(player: player)
   end
 end

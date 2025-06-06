@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+alice:
+  uuid: "550e8400-e29b-41d4-a716-446655440001"
+  name: "Alice Cooper"
+
+bob:
+  uuid: "550e8400-e29b-41d4-a716-446655440002"
+  name: "Bob Builder"
