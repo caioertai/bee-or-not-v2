@@ -2,6 +2,8 @@ require 'net/http'
 require 'uri'
 require 'json'
 require 'nokogiri'
+require 'cgi'
+require 'base64'
 
 module Scrapers
   class BabylonBeeScraper
@@ -39,18 +41,30 @@ module Scrapers
 
       Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
         request = Net::HTTP::Post.new(uri)
-        request['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-        request['Content-Type'] = 'application/x-www-form-urlencoded'
-        request['Accept'] = 'application/json, text/javascript, */*; q=0.01'
+        request['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36'
+        request['Content-Type'] = 'application/json'
+        request['Accept'] = 'application/json, text/plain, */*'
+        request['Accept-Language'] = 'en-US,en;q=0.9'
         request['X-Requested-With'] = 'XMLHttpRequest'
         request['Cookie'] = session_cookie
-        request['X-CSRF-TOKEN'] = csrf_token
-        request['Referer'] = "#{BASE_URL}/news"
-        
-        # Send CSRF token and page parameter in POST body
-        # Try different parameter formats that Laravel might expect
-        request.body = "_token=#{csrf_token}" + (page > 1 ? "&page=#{page}" : "")
-        
+        request['Origin'] = BASE_URL
+        request['Sec-Fetch-Dest'] = 'empty'
+        request['Sec-Fetch-Mode'] = 'cors'
+        request['Sec-Fetch-Site'] = 'same-origin'
+        request['x-xsrf-token'] = csrf_token
+        request['Referer'] = "#{BASE_URL}/news?page=#{page}"
+
+        # Send JSON body with pagination parameters
+        skip = (page - 1) * 12  # Calculate skip based on page (12 items per page)
+        request_data = {
+          category: "latest",
+          sort: "desc", 
+          skip: skip,
+          take: 12,
+          isAuthor: false
+        }
+        request.body = request_data.to_json
+
         http.request(request)
       end
     rescue => e
@@ -63,24 +77,28 @@ module Scrapers
 
       Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
         request = Net::HTTP::Get.new(uri)
-        request['User-Agent'] = 'Mozilla/5.0 (compatible; BeeOrNotBot/1.0)'
-        
+        request['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36'
+
         response = http.request(request)
-        
+
         if response.is_a?(Net::HTTPSuccess)
-          # Extract CSRF token from meta tag
-          doc = Nokogiri::HTML(response.body)
-          csrf_meta = doc.css('meta[name="csrf-token"]').first
-          csrf_token = csrf_meta&.attr('content')
-          
           # Extract all cookies - Laravel needs both XSRF-TOKEN and session cookie
           cookies = response.get_fields('Set-Cookie')
           session_cookies = cookies&.map { |cookie| cookie.split(';').first }&.join('; ')
-          
-          return [csrf_token, session_cookies] if csrf_token && session_cookies
+
+          # Extract XSRF token from cookies
+          xsrf_cookie = cookies&.find { |cookie| cookie.start_with?('XSRF-TOKEN=') }
+          if xsrf_cookie
+            encoded_token = xsrf_cookie.split('=', 2)[1].split(';').first
+            # URL decode the token
+            xsrf_token = CGI.unescape(encoded_token)
+
+            # Use the raw encoded token directly (as seen in the curl example)
+            return [xsrf_token, session_cookies] if session_cookies
+          end
         end
       end
-      
+
       [nil, nil]
     rescue => e
       Rails.logger.error "Failed to get CSRF token: #{e.message}"
@@ -92,7 +110,7 @@ module Scrapers
       headlines = []
 
       articles = data['articles'] || []
-      
+
       articles.each do |article|
         headline_data = extract_article_data(article)
         next if headline_data.nil?
