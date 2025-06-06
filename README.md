@@ -172,7 +172,7 @@ kamal deploy
 
 ### Technical Enhancements
 
-- [x] **~~Scraper Configuration~~**: ✅ Added YAML configuration pattern with base scraper class
+- [ ] **Scraper Configuration**: Move hardcoded URLs to Rails configuration files
 - [ ] **API Monitoring**: Track Babylon Bee API changes and health
 - [ ] **Real-time Multiplayer**: WebSocket-based multiplayer games
 - [ ] **Mobile App**: React Native or PWA implementation
