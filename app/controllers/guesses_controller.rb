@@ -11,8 +11,6 @@ class GuessesController < ApplicationController
     @guess = @round.guesses.build(guess_params)
 
     if @guess.save
-      @game.increment_score! if @guess.correct?
-
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: [

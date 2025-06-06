@@ -1,16 +1,19 @@
 class Game < ApplicationRecord
   has_many :rounds, dependent: :destroy
-
-  validates :score, presence: true, numericality: { greater_than_or_equal_to: 0 }
+  has_many :guesses, through: :rounds
 
   after_create :create_first_round
 
   def total_rounds
-    rounds.where.not(guesses: { id: nil }).joins(:guesses).distinct.count
+    rounds.joins(:guesses).distinct.count
   end
 
   def correct_rounds
     rounds.joins(:guesses).where(guesses: { correct: true }).distinct.count
+  end
+
+  def score
+    guesses.where(correct: true).count
   end
 
   def accuracy_percentage
@@ -21,10 +24,6 @@ class Game < ApplicationRecord
 
   def current_round
     rounds.includes(:guesses).find { |round| !round.completed? } || create_next_round
-  end
-
-  def increment_score!
-    increment!(:score)
   end
 
   private

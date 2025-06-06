@@ -1,9 +1,19 @@
 require "test_helper"
 
 class GameTest < ActiveSupport::TestCase
-  test "should be valid with default score" do
+  test "should be valid" do
     game = Game.new
     assert game.valid?
+  end
+
+  test "score should return count of correct guesses" do
+    game = games(:active_game)
+    expected_score = game.guesses.where(correct: true).count
+    assert_equal expected_score, game.score
+  end
+
+  test "score should return 0 for new game" do
+    game = games(:new_game)
     assert_equal 0, game.score
   end
 
@@ -57,10 +67,9 @@ class GameTest < ActiveSupport::TestCase
     assert_equal game, round.game
   end
 
-  test "increment_score! should increase score by 1" do
-    game = games(:new_game)
-    original_score = game.score
-    game.increment_score!
-    assert_equal original_score + 1, game.reload.score
+  test "should have many guesses through rounds" do
+    game = games(:active_game)
+    assert_respond_to game, :guesses
+    assert game.guesses.any?
   end
 end
