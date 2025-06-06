@@ -15,7 +15,7 @@
   .mb-6.p-4.bg-blue-50.rounded-lg
     p.text-sm.text-blue-800
       strong Your guess: 
-      span.capitalize = guess.user_guess
+      span = guess.guess_text
     p.text-sm.text-blue-800.mt-1
       strong Actual: 
       = guess.round.headline.real? ? "Real" : "Fake"

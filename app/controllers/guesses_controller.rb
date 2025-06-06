@@ -6,7 +6,7 @@ class GuessesController < ApplicationController
   end
 
   def create
-    @guess = @game.current_round.guesses.build(guess_params)
+    @guess = @game.current_round.guesses.build(real: user_guess_to_boolean)
 
     if @guess.save
       respond_to do |format|
@@ -31,7 +31,7 @@ class GuessesController < ApplicationController
     @game.create_next_round! if @game.current_round.nil?
   end
 
-  def guess_params
-    params.require(:guess).permit(:user_guess)
+  def user_guess_to_boolean
+    params.require(:guess)[:user_guess] == "real"
   end
 end

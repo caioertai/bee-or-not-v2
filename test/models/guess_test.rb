@@ -7,21 +7,19 @@ class GuessTest < ActiveSupport::TestCase
     assert_instance_of Round, guess.round
   end
 
-  test "should validate user_guess presence and inclusion" do
+  test "should validate real field presence and inclusion" do
     round = rounds(:current_round)
     guess = Guess.new(round: round)
 
-    # Should require user_guess
+    # Should require real field
     assert_not guess.valid?
-    assert_includes guess.errors[:user_guess], "can't be blank"
+    assert_includes guess.errors[:real], "is not included in the list"
 
-    # Should only allow 'real' or 'fake'
-    guess.user_guess = "invalid"
-    assert_not guess.valid?
-    assert_includes guess.errors[:user_guess], "is not included in the list"
-
-    # Should be valid with correct values
-    guess.user_guess = "real"
+    # Should be valid with boolean values
+    guess.real = true
+    assert guess.valid?
+    
+    guess.real = false
     assert guess.valid?
   end
 
@@ -30,17 +28,20 @@ class GuessTest < ActiveSupport::TestCase
     real_headline = round.headline  # This is real_headline from fixtures
 
     # Correct guess for real headline
-    correct_guess = Guess.new(round: round, user_guess: "real")
+    correct_guess = Guess.new(round: round, real: true)
     assert correct_guess.correct?
 
     # Incorrect guess for real headline
-    incorrect_guess = Guess.new(round: round, user_guess: "fake")
+    incorrect_guess = Guess.new(round: round, real: false)
     assert_not incorrect_guess.correct?
   end
 
-  test "guess_text should capitalize user_guess" do
-    guess = guesses(:correct_real_guess)
-    assert_equal "Real", guess.guess_text
+  test "guess_text should return proper text for boolean real value" do
+    real_guess = guesses(:correct_real_guess)
+    assert_equal "Real", real_guess.guess_text
+    
+    fake_guess = guesses(:correct_fake_guess)
+    assert_equal "Fake", fake_guess.guess_text
   end
 
   test "result_text should return appropriate message" do

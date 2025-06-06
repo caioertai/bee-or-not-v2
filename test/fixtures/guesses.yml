@@ -2,12 +2,12 @@
 
 correct_real_guess:
   round: round_with_correct_guess
-  user_guess: real
+  real: true
 
 incorrect_real_guess:
   round: round_with_incorrect_guess
-  user_guess: real
+  real: true
 
 correct_fake_guess:
   round: round_for_completed_game
-  user_guess: fake
+  real: false

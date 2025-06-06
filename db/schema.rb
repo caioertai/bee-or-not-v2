@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_06_030239) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_06_031305) do
   create_table "games", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -18,9 +18,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_06_030239) do
 
   create_table "guesses", force: :cascade do |t|
     t.integer "round_id", null: false
-    t.string "user_guess", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "real"
     t.index ["round_id", "created_at"], name: "index_guesses_on_round_id_and_created_at"
     t.index ["round_id"], name: "index_guesses_on_round_id"
   end

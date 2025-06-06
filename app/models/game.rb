@@ -9,19 +9,13 @@ class Game < ApplicationRecord
 
   def correct_rounds
     rounds.joins(guesses: { round: :headline })
-          .where(
-            "(guesses.user_guess = 'real' AND headlines.real = true) OR " \
-            "(guesses.user_guess = 'fake' AND headlines.real = false)"
-          )
+          .where("guesses.real = headlines.real")
           .distinct.count
   end
 
   def score
     guesses.joins(round: :headline)
-           .where(
-             "(guesses.user_guess = 'real' AND headlines.real = true) OR " \
-             "(guesses.user_guess = 'fake' AND headlines.real = false)"
-           )
+           .where("guesses.real = headlines.real")
            .count
   end
 

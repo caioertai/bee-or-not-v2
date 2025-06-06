@@ -1,15 +1,14 @@
 class Guess < ApplicationRecord
   belongs_to :round
 
-  validates :user_guess, presence: true, inclusion: { in: %w[real fake] }
+  validates :real, inclusion: { in: [ true, false ] }
 
   def guess_text
-    user_guess&.capitalize
+    real? ? "Real" : "Fake"
   end
 
   def correct?
-    (user_guess == "real" && round.headline.real?) ||
-    (user_guess == "fake" && round.headline.fake?)
+    real == round.headline.real
   end
 
   def result_text
