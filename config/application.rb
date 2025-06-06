@@ -39,6 +39,8 @@ module BeeOrNotV2
     # Configure generators to use Slim templates by default
     config.generators do |g|
       g.template_engine :slim
+      g.helper false
+      g.assets false
     end
   end
 end
