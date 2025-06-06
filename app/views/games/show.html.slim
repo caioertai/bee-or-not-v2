@@ -8,12 +8,12 @@
         .bg-blue-50.rounded-lg.p-6
           .text-3xl.font-bold.text-blue-600.mb-2 = @game.score
           .text-lg.text-blue-800 out of #{@game.total_rounds} correct
-          .text-2xl.font-bold.text-blue-600.mt-2 #{@game.accuracy_percentage}%
+          .text-2xl.font-bold.text-blue-600.mt-2 = number_to_percentage(@game.accuracy_ratio * 100, precision: 1)
           .text-sm.text-blue-600 accuracy
         
-        - if @game.accuracy_percentage >= 80
+        - if @game.accuracy_ratio >= 0.8
           .text-green-600.font-semibold 🏆 Excellent! You're great at spotting fake news!
-        - elsif @game.accuracy_percentage >= 60
+        - elsif @game.accuracy_ratio >= 0.6
           .text-yellow-600.font-semibold 👍 Good job! Keep practicing to improve your skills.
         - else
           .text-red-600.font-semibold 🤔 Keep practicing! Fake news detection takes time to master.

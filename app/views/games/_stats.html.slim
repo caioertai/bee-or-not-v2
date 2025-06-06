@@ -13,5 +13,5 @@
       .text-sm.text-gray-600 Total Rounds
     
     .bg-green-50.rounded-lg.p-4
-      .text-2xl.font-bold.text-green-600 #{game.accuracy_percentage}%
+      .text-2xl.font-bold.text-green-600 = number_to_percentage(game.accuracy_ratio * 100, precision: 1)
       .text-sm.text-gray-600 Accuracy

@@ -42,22 +42,22 @@ class GameTest < ActiveSupport::TestCase
     assert_equal expected_correct, game.correct_rounds
   end
 
-  test "accuracy_percentage should calculate correctly" do
+  test "accuracy_ratio should calculate correctly" do
     game = games(:active_game)
     total = game.total_rounds
     correct = game.correct_rounds
 
     if total > 0
-      expected = (correct.to_f / total * 100).round(1)
-      assert_equal expected, game.accuracy_percentage
+      expected = correct.to_f / total
+      assert_equal expected, game.accuracy_ratio
     else
-      assert_equal 0, game.accuracy_percentage
+      assert_equal 0, game.accuracy_ratio
     end
   end
 
-  test "accuracy_percentage should return 0 for no completed rounds" do
+  test "accuracy_ratio should return 0 for no completed rounds" do
     game = games(:new_game)
-    assert_equal 0, game.accuracy_percentage
+    assert_equal 0, game.accuracy_ratio
   end
 
   test "should have current_round association" do

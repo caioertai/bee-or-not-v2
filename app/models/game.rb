@@ -17,10 +17,10 @@ class Game < ApplicationRecord
     guesses.where(correct: true).count
   end
 
-  def accuracy_percentage
+  def accuracy_ratio
     return 0 if total_rounds.zero?
 
-    (correct_rounds.to_f / total_rounds * 100).round(1)
+    correct_rounds.to_f / total_rounds
   end
 
   def create_next_round!
