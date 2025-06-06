@@ -1,9 +1,9 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-reuters:
-  base_url: https://reuters.com
-  slug: reuters
-  name: Reuters
+not_the_bee:
+  base_url: https://notthebee.com
+  slug: not-the-bee
+  name: Not the Bee
   real: true
 
 babylon_bee:

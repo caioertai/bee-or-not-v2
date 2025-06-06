@@ -25,9 +25,9 @@ fake_headlines = [
 ]
 
 # Create sources
-real_source = Source.find_or_create_by!(slug: 'reuters') do |source|
-  source.base_url = 'https://reuters.com'
-  source.name = 'Reuters'
+real_source = Source.find_or_create_by!(slug: 'not-the-bee') do |source|
+  source.base_url = 'https://notthebee.com'
+  source.name = 'Not the Bee'
   source.real = true
 end
 

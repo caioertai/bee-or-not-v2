@@ -78,7 +78,7 @@ class SourceTest < ActiveSupport::TestCase
   end
 
   test "should have headlines association" do
-    source = sources(:reuters)
+    source = sources(:not_the_bee)
     assert_respond_to source, :headlines
     assert source.headlines.count > 0
   end
