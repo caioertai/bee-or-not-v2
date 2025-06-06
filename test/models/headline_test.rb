@@ -2,7 +2,7 @@ require "test_helper"
 
 class HeadlineTest < ActiveSupport::TestCase
   test "should be valid with valid attributes" do
-    headline = Headline.new(content: "Valid headline content", real: true)
+    headline = Headline.new(content: "Valid headline content", real: true, source: sources(:reuters))
     assert headline.valid?
   end
 
@@ -41,11 +41,10 @@ class HeadlineTest < ActiveSupport::TestCase
     assert headline.fake?
   end
 
-  test "source_url should return a valid URL" do
+  test "source_url should return source base_url" do
     headline = headlines(:real_headline)
     url = headline.source_url
-    assert url.start_with?("https://")
-    assert url.include?(headline.id.to_s)
+    assert_equal headline.source.base_url, url
   end
 
   test "real scope should return only real headlines" do

@@ -2,8 +2,9 @@
 # development, test). The code here should be idempotent so that it can be executed at any point in every environment.
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 
-# Clear existing headlines to ensure idempotency
+# Clear existing data to ensure idempotency
 Headline.destroy_all
+Source.destroy_all
 
 # Real headlines - based on actual news patterns
 real_headlines = [
@@ -23,14 +24,33 @@ fake_headlines = [
   "Scientists Prove That Monday is Actually the Worst Day of the Week"
 ]
 
+# Create sources
+real_source = Source.find_or_create_by!(slug: 'reuters') do |source|
+  source.base_url = 'https://reuters.com'
+  source.name = 'Reuters'
+  source.real = true
+end
+
+fake_source = Source.find_or_create_by!(slug: 'babylon-bee') do |source|
+  source.base_url = 'https://babylonbee.com'
+  source.name = 'The Babylon Bee'
+  source.real = false
+end
+
 # Create real headlines
 real_headlines.each do |content|
-  Headline.find_or_create_by!(content: content, real: true)
+  Headline.find_or_create_by!(content: content) do |headline|
+    headline.real = true
+    headline.source = real_source
+  end
 end
 
 # Create fake headlines
 fake_headlines.each do |content|
-  Headline.find_or_create_by!(content: content, real: false)
+  Headline.find_or_create_by!(content: content) do |headline|
+    headline.real = false
+    headline.source = fake_source
+  end
 end
 
 puts "Seeded #{Headline.count} headlines (#{Headline.real.count} real, #{Headline.fake.count} fake)"
