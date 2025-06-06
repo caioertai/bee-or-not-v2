@@ -26,7 +26,20 @@ class Game < ApplicationRecord
   end
 
   def create_next_round!
-    headline = Headline.order("RANDOM()").first
-    self.current_round = rounds.create!(headline: headline)
+    available_headline = available_headlines.order("RANDOM()").first
+    return nil unless available_headline
+
+    self.current_round = rounds.create!(headline: available_headline)
+  end
+
+  def completed?
+    available_headlines.empty?
+  end
+
+  private
+
+  def available_headlines
+    used_headline_ids = rounds.pluck(:headline_id)
+    Headline.where.not(id: used_headline_ids)
   end
 end

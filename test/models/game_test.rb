@@ -91,4 +91,78 @@ class GameTest < ActiveSupport::TestCase
     assert_respond_to game, :guesses
     assert game.guesses.any?
   end
+
+  test "create_next_round! should not use headlines already used in the game" do
+    game = Game.create!
+    game.rounds.destroy_all
+
+    # Create rounds for all but one headline
+    all_headlines = Headline.all
+    used_headlines = all_headlines.first(all_headlines.count - 1)
+
+    used_headlines.each do |headline|
+      round = game.rounds.create!(headline: headline)
+      round.guesses.create!(real: true)  # Complete the round
+    end
+
+    # Create next round should use the remaining headline
+    remaining_headline = all_headlines.last
+    new_round = game.create_next_round!
+
+    assert_equal remaining_headline, new_round.headline
+    assert_not_includes used_headlines, new_round.headline
+  end
+
+  test "create_next_round! should return nil when no headlines are available" do
+    game = Game.create!
+    game.rounds.destroy_all
+
+    # Create rounds for all headlines
+    Headline.all.each do |headline|
+      round = game.rounds.create!(headline: headline)
+      round.guesses.create!(real: true)  # Complete the round
+    end
+
+    # Should return nil when no headlines are left
+    assert_nil game.create_next_round!
+  end
+
+  test "completed? should return false when headlines are available" do
+    game = Game.create!
+    game.rounds.destroy_all
+
+    # Create a round for only one headline
+    headline = Headline.first
+    round = game.rounds.create!(headline: headline)
+    round.guesses.create!(real: true)
+
+    assert_not game.completed?
+  end
+
+  test "completed? should return true when all headlines have been used" do
+    game = Game.create!
+    game.rounds.destroy_all
+
+    # Use all headlines
+    Headline.all.each do |headline|
+      round = game.rounds.create!(headline: headline)
+      round.guesses.create!(real: true)
+    end
+
+    assert game.completed?
+  end
+
+  test "available_headlines should exclude headlines already used in rounds" do
+    game = Game.create!
+    game.rounds.destroy_all
+
+    # Use first headline
+    used_headline = Headline.first
+    game.rounds.create!(headline: used_headline)
+
+    available = game.send(:available_headlines)
+
+    assert_not_includes available, used_headline
+    assert_equal Headline.count - 1, available.count
+  end
 end

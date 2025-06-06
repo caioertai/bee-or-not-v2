@@ -9,14 +9,26 @@ class GuessesController < ApplicationController
     @guess = @game.current_round.guesses.build(guess_params)
 
     if @guess.save
-      respond_to do |format|
-        format.turbo_stream do
-          render turbo_stream: [
-            turbo_stream.replace("round-content", partial: "guesses/feedback", locals: { guess: @guess, game: @game }),
-            turbo_stream.replace("game-stats", partial: "games/stats", locals: { game: @game })
-          ]
+      if @game.completed?
+        respond_to do |format|
+          format.turbo_stream do
+            render turbo_stream: [
+              turbo_stream.replace("round-content", partial: "guesses/feedback", locals: { guess: @guess, game: @game, game_completed: true }),
+              turbo_stream.replace("game-stats", partial: "games/stats", locals: { game: @game })
+            ]
+          end
+          format.html { redirect_to game_path(@game) }
         end
-        format.html { redirect_to new_game_guess_path(@game) }
+      else
+        respond_to do |format|
+          format.turbo_stream do
+            render turbo_stream: [
+              turbo_stream.replace("round-content", partial: "guesses/feedback", locals: { guess: @guess, game: @game, game_completed: false }),
+              turbo_stream.replace("game-stats", partial: "games/stats", locals: { game: @game })
+            ]
+          end
+          format.html { redirect_to new_game_guess_path(@game) }
+        end
       end
     else
       render :new, status: :unprocessable_entity
@@ -28,7 +40,14 @@ class GuessesController < ApplicationController
 
   def set_game
     @game = Game.includes(current_round: [ :headline, :guesses ]).find(params[:game_id])
-    @game.create_next_round! if @game.current_round.nil?
+
+    if @game.current_round.nil?
+      if @game.completed?
+        redirect_to game_path(@game) and return
+      else
+        @game.create_next_round!
+      end
+    end
   end
 
   def guess_params
