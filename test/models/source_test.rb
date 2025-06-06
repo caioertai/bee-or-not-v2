@@ -48,7 +48,7 @@ class SourceTest < ActiveSupport::TestCase
       name: "Other",
       real: false
     )
-    
+
     assert_not duplicate_source.valid?
     assert_includes duplicate_source.errors[:slug], "has already been taken"
   end

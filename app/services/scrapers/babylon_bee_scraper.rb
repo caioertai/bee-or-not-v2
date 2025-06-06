@@ -1,14 +1,14 @@
-require 'net/http'
-require 'uri'
-require 'json'
-require 'nokogiri'
-require 'cgi'
-require 'base64'
+require "net/http"
+require "uri"
+require "json"
+require "nokogiri"
+require "cgi"
+require "base64"
 
 module Scrapers
   class BabylonBeeScraper
-    BASE_URL = 'https://babylonbee.com'
-    API_PATH = '/loadArticles'
+    BASE_URL = "https://babylonbee.com"
+    API_PATH = "/loadArticles"
 
     def initialize
       @source = find_or_create_source
@@ -25,9 +25,9 @@ module Scrapers
     private
 
     def find_or_create_source
-      Source.find_or_create_by(slug: 'babylon-bee') do |source|
+      Source.find_or_create_by(slug: "babylon-bee") do |source|
         source.base_url = BASE_URL
-        source.name = 'The Babylon Bee'
+        source.name = "The Babylon Bee"
         source.real = false
       end
     end
@@ -39,26 +39,26 @@ module Scrapers
 
       uri = URI.join(BASE_URL, API_PATH)
 
-      Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
+      Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == "https") do |http|
         request = Net::HTTP::Post.new(uri)
-        request['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36'
-        request['Content-Type'] = 'application/json'
-        request['Accept'] = 'application/json, text/plain, */*'
-        request['Accept-Language'] = 'en-US,en;q=0.9'
-        request['X-Requested-With'] = 'XMLHttpRequest'
-        request['Cookie'] = session_cookie
-        request['Origin'] = BASE_URL
-        request['Sec-Fetch-Dest'] = 'empty'
-        request['Sec-Fetch-Mode'] = 'cors'
-        request['Sec-Fetch-Site'] = 'same-origin'
-        request['x-xsrf-token'] = csrf_token
-        request['Referer'] = "#{BASE_URL}/news?page=#{page}"
+        request["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"
+        request["Content-Type"] = "application/json"
+        request["Accept"] = "application/json, text/plain, */*"
+        request["Accept-Language"] = "en-US,en;q=0.9"
+        request["X-Requested-With"] = "XMLHttpRequest"
+        request["Cookie"] = session_cookie
+        request["Origin"] = BASE_URL
+        request["Sec-Fetch-Dest"] = "empty"
+        request["Sec-Fetch-Mode"] = "cors"
+        request["Sec-Fetch-Site"] = "same-origin"
+        request["x-xsrf-token"] = csrf_token
+        request["Referer"] = "#{BASE_URL}/news?page=#{page}"
 
         # Send JSON body with pagination parameters
         skip = (page - 1) * 12  # Calculate skip based on page (12 items per page)
         request_data = {
           category: "latest",
-          sort: "desc", 
+          sort: "desc",
           skip: skip,
           take: 12,
           isAuthor: false
@@ -73,43 +73,43 @@ module Scrapers
     end
 
     def get_csrf_token
-      uri = URI.join(BASE_URL, '/news')
+      uri = URI.join(BASE_URL, "/news")
 
-      Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
+      Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == "https") do |http|
         request = Net::HTTP::Get.new(uri)
-        request['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36'
+        request["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"
 
         response = http.request(request)
 
         if response.is_a?(Net::HTTPSuccess)
           # Extract all cookies - Laravel needs both XSRF-TOKEN and session cookie
-          cookies = response.get_fields('Set-Cookie')
-          session_cookies = cookies&.map { |cookie| cookie.split(';').first }&.join('; ')
+          cookies = response.get_fields("Set-Cookie")
+          session_cookies = cookies&.map { |cookie| cookie.split(";").first }&.join("; ")
 
           # Extract XSRF token from cookies
-          xsrf_cookie = cookies&.find { |cookie| cookie.start_with?('XSRF-TOKEN=') }
+          xsrf_cookie = cookies&.find { |cookie| cookie.start_with?("XSRF-TOKEN=") }
           if xsrf_cookie
-            encoded_token = xsrf_cookie.split('=', 2)[1].split(';').first
+            encoded_token = xsrf_cookie.split("=", 2)[1].split(";").first
             # URL decode the token
             xsrf_token = CGI.unescape(encoded_token)
 
             # Use the raw encoded token directly (as seen in the curl example)
-            return [xsrf_token, session_cookies] if session_cookies
+            return [ xsrf_token, session_cookies ] if session_cookies
           end
         end
       end
 
-      [nil, nil]
+      [ nil, nil ]
     rescue => e
       Rails.logger.error "Failed to get CSRF token: #{e.message}"
-      [nil, nil]
+      [ nil, nil ]
     end
 
     def parse_articles_json(json_body)
       data = JSON.parse(json_body)
       headlines = []
 
-      articles = data['articles'] || []
+      articles = data["articles"] || []
 
       articles.each do |article|
         headline_data = extract_article_data(article)
@@ -125,10 +125,10 @@ module Scrapers
     end
 
     def extract_article_data(article)
-      title = article['title']
+      title = article["title"]
       return nil if title.blank?
 
-      path = article['path']
+      path = article["path"]
       source_url = path.present? ? URI.join(BASE_URL, path).to_s : BASE_URL
 
       {
@@ -139,7 +139,7 @@ module Scrapers
 
     def create_headline(data)
       existing_headline = Headline.joins(:source)
-                                  .where(content: data[:content], sources: { slug: 'babylon-bee' })
+                                  .where(content: data[:content], sources: { slug: "babylon-bee" })
                                   .first
 
       return existing_headline if existing_headline
