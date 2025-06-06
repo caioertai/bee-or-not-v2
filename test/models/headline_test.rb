@@ -2,7 +2,7 @@ require "test_helper"
 
 class HeadlineTest < ActiveSupport::TestCase
   test "should be valid with valid attributes" do
-    headline = Headline.new(content: "Valid headline content", real: true)
+    headline = Headline.new(content: "Valid headline content", real: true, source: sources(:reuters), source_url: "https://example.com/news")
     assert headline.valid?
   end
 
@@ -19,33 +19,37 @@ class HeadlineTest < ActiveSupport::TestCase
   end
 
   test "content should have minimum length" do
-    headline = Headline.new(content: "short", real: true)
+    headline = Headline.new(content: "short", real: true, source: sources(:reuters), source_url: "https://example.com/news")
     assert_not headline.valid?
     assert_includes headline.errors[:content], "is too short (minimum is 10 characters)"
   end
 
   test "content should have maximum length" do
     long_content = "a" * 501
-    headline = Headline.new(content: long_content, real: true)
+    headline = Headline.new(content: long_content, real: true, source: sources(:reuters), source_url: "https://example.com/news")
     assert_not headline.valid?
     assert_includes headline.errors[:content], "is too long (maximum is 500 characters)"
   end
 
   test "real? should return true for real headlines" do
-    headline = Headline.new(content: "Real headline content", real: true)
+    headline = Headline.new(content: "Real headline content", real: true, source: sources(:reuters), source_url: "https://example.com/news")
     assert headline.real?
   end
 
   test "fake? should return true for fake headlines" do
-    headline = Headline.new(content: "Fake headline content", real: false)
+    headline = Headline.new(content: "Fake headline content", real: false, source: sources(:babylon_bee), source_url: "https://example.com/news")
     assert headline.fake?
   end
 
-  test "source_url should return a valid URL" do
-    headline = headlines(:real_headline)
-    url = headline.source_url
-    assert url.start_with?("https://")
-    assert url.include?(headline.id.to_s)
+  test "should require source_url" do
+    headline = Headline.new(content: "Valid headline content", real: true, source: sources(:reuters))
+    assert_not headline.valid?
+    assert_includes headline.errors[:source_url], "can't be blank"
+  end
+
+  test "should be valid with source_url" do
+    headline = Headline.new(content: "Valid headline content", real: true, source: sources(:reuters), source_url: "https://example.com/news")
+    assert headline.valid?
   end
 
   test "real scope should return only real headlines" do

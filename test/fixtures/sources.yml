@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+reuters:
+  base_url: https://reuters.com
+  slug: reuters
+  name: Reuters
+  real: true
+
+babylon_bee:
+  base_url: https://babylonbee.com
+  slug: babylon-bee
+  name: The Babylon Bee
+  real: false

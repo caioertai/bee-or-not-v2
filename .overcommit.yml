@@ -1,0 +1,26 @@
+# Overcommit configuration for code quality enforcement
+# See https://github.com/sds/overcommit for documentation
+
+# Automatically install hooks when the repository is cloned
+install_on_up: true
+
+# Global configuration
+verify_signatures: false
+
+# Pre-push hooks (run before git push)
+PrePush:
+  RuboCop:
+    enabled: true
+    description: 'Checking Ruby code style with RuboCop'
+    required_executable: 'bundle'
+    command: ['bundle', 'exec', 'rubocop']
+    flags: ['--force-exclusion']
+    on_warn: fail
+
+  Brakeman:
+    enabled: true
+    description: 'Checking for security vulnerabilities with Brakeman'
+    required_executable: 'bundle'
+    command: ['bundle', 'exec', 'brakeman']
+    flags: ['--quiet', '--no-pager']
+    on_warn: fail
