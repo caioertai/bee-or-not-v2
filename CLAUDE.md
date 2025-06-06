@@ -115,3 +115,35 @@ kamal deploy                # Deploy with Kamal 2
 ## Performance Considerations
 
 The current implementation uses `RANDOM()` for headline selection, which is noted in the README as needing optimization for scalability. Score calculations involve complex joins that may benefit from caching in high-traffic scenarios.
+
+## Development Workflow & Quality Standards
+
+### Code Quality Expectations
+- **Always run RuboCop** before committing - use `bin/rubocop -A` for auto-corrections
+- **Comprehensive testing required** - run `bin/rails test` frequently during development
+- **Data integrity focus** - implement both Rails validations AND database constraints
+- **Explicit over implicit** - prefer direct attributes with validation over methods with fallback logic
+
+### Git & Documentation Standards
+- **Detailed commit messages** using the established format with `🤖 Generated with [Claude Code]` footer
+- **Comprehensive PR descriptions** with summary, changes made, and test plan sections
+- **Proactive documentation updates** - update README TODOs when features are completed
+- **Use TodoWrite tool extensively** for task planning and progress tracking
+
+### Database Design Principles
+- **Progressive constraint tightening** - start nullable, populate data, then add NOT NULL
+- **Dual-layer validation** - Rails validations for user feedback, DB constraints for data integrity
+- **Thoughtful migrations** - handle existing data gracefully in schema changes
+- **Proper associations** - use `belongs_to`/`has_many` with appropriate `dependent:` options
+
+### API Integration Approach
+- **Analyze real requests** - when provided curl commands, implement exactly as specified
+- **Graceful error handling** - comprehensive logging and fallback strategies
+- **Authentication complexity** - handle CSRF tokens, session cookies, and headers properly
+- **Respectful scraping** - consider rate limiting and Terms of Service compliance
+
+### Testing Philosophy  
+- **Test-driven refinement** - run tests after every significant change
+- **Update fixtures comprehensively** - ensure test data reflects new model requirements
+- **Edge case coverage** - test validation failures, duplicate prevention, error scenarios
+- **Integration verification** - test that scrapers and external integrations work end-to-end
