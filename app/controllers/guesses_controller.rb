@@ -17,11 +17,7 @@ class GuessesController < ApplicationController
           ]
         end
         format.html do
-          if @game.completed?
-            redirect_to game_path(@game)
-          else
-            redirect_to new_game_guess_path(@game)
-          end
+          @game.completed? ? redirect_to(@game) : redirect_to(new_game_guess_path(@game))
         end
       end
     else
