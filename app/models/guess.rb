@@ -3,6 +3,10 @@ class Guess < ApplicationRecord
 
   validates :real, inclusion: { in: [ true, false ] }
 
+  def game
+    round.game
+  end
+
   def guess_text
     real? ? "Real" : "Fake"
   end

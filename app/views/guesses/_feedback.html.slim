@@ -28,7 +28,7 @@
       span View Source
       span.text-xs ↗
   
-  - if local_assigns[:game_completed]
+  - if guess.game.completed?
     .mb-6.p-6.bg-yellow-50.rounded-lg.border-l-4.border-yellow-500
       .text-center
         .text-4xl.mb-3 🏆
@@ -36,12 +36,12 @@
         p.text-yellow-700 Thanks for playing!
     
     .space-y-4
-      = link_to "View Final Score", game_path(game), 
+      = link_to "View Final Score", game_path(guess.game), 
                 class: "block w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 text-lg text-center"
   - else
     .space-y-4
-      = link_to "Next Round", new_game_guess_path(game), 
+      = link_to "Next Round", new_game_guess_path(guess.game), 
                 class: "block w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 text-lg text-center"
       
-      = link_to "View Final Score", game_path(game), 
+      = link_to "View Final Score", game_path(guess.game), 
                 class: "block w-full border-2 border-gray-300 hover:border-gray-400 text-gray-700 font-bold py-3 px-6 rounded-lg transition-colors duration-200 text-center"

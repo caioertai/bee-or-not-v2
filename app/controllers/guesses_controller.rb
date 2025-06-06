@@ -9,25 +9,19 @@ class GuessesController < ApplicationController
     @guess = @game.current_round.guesses.build(guess_params)
 
     if @guess.save
-      if @game.completed?
-        respond_to do |format|
-          format.turbo_stream do
-            render turbo_stream: [
-              turbo_stream.replace("round-content", partial: "guesses/feedback", locals: { guess: @guess, game: @game, game_completed: true }),
-              turbo_stream.replace("game-stats", partial: "games/stats", locals: { game: @game })
-            ]
-          end
-          format.html { redirect_to game_path(@game) }
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace("round-content", partial: "guesses/feedback", locals: { guess: @guess }),
+            turbo_stream.replace("game-stats", partial: "games/stats", locals: { game: @game })
+          ]
         end
-      else
-        respond_to do |format|
-          format.turbo_stream do
-            render turbo_stream: [
-              turbo_stream.replace("round-content", partial: "guesses/feedback", locals: { guess: @guess, game: @game, game_completed: false }),
-              turbo_stream.replace("game-stats", partial: "games/stats", locals: { game: @game })
-            ]
+        format.html do
+          if @game.completed?
+            redirect_to game_path(@game)
+          else
+            redirect_to new_game_guess_path(@game)
           end
-          format.html { redirect_to new_game_guess_path(@game) }
         end
       end
     else

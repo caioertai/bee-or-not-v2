@@ -152,7 +152,7 @@ class GameTest < ActiveSupport::TestCase
     assert game.completed?
   end
 
-  test "available_headlines should exclude headlines already used in rounds" do
+  test "available_headlines method should exclude headlines already used in rounds" do
     game = Game.create!
     game.rounds.destroy_all
 
@@ -160,9 +160,15 @@ class GameTest < ActiveSupport::TestCase
     used_headline = Headline.first
     game.rounds.create!(headline: used_headline)
 
-    available = game.send(:available_headlines)
+    available = game.available_headlines
 
     assert_not_includes available, used_headline
     assert_equal Headline.count - 1, available.count
+  end
+
+  test "should have available_headlines method" do
+    game = Game.create!
+    assert_respond_to game, :available_headlines
+    assert_kind_of ActiveRecord::Relation, game.available_headlines
   end
 end
