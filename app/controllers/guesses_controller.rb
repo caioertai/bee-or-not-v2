@@ -32,8 +32,6 @@ class GuessesController < ApplicationController
   end
 
   def guess_params
-    # Convert "real" to true, "fake" to false for the real boolean attribute
-    real_value = params.require(:guess)[:user_guess] == "real"
-    { real: real_value }
+    params.require(:guess).permit(:real)
   end
 end

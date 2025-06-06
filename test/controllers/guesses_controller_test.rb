@@ -25,11 +25,11 @@ class GuessesControllerTest < ActionDispatch::IntegrationTest
   test "should create guess with correct answer" do
     # Create a round for the game first with a specific headline
     round = @game.rounds.create!(headline: headlines(:real_headline))
-    correct_answer = "real"  # We know this headline is real
+    correct_answer = true  # We know this headline is real
 
     assert_difference "@game.rounds.joins(:guesses).distinct.count", 1 do
       post game_guess_url(@game), params: {
-        guess: { user_guess: correct_answer }
+        guess: { real: correct_answer }
       }
     end
 
@@ -40,11 +40,11 @@ class GuessesControllerTest < ActionDispatch::IntegrationTest
   test "should create guess with incorrect answer" do
     # Create a round for the game first with a specific headline
     round = @game.rounds.create!(headline: headlines(:real_headline))
-    incorrect_answer = "fake"  # This will be incorrect since headline is real
+    incorrect_answer = false  # This will be incorrect since headline is real
 
     assert_difference "Guess.count", 1 do
       post game_guess_url(@game), params: {
-        guess: { user_guess: incorrect_answer }
+        guess: { real: incorrect_answer }
       }
     end
 
@@ -54,7 +54,7 @@ class GuessesControllerTest < ActionDispatch::IntegrationTest
   test "should respond with turbo stream" do
     post game_guess_url(@game),
          params: {
-           guess: { user_guess: "real" }
+           guess: { real: true }
          },
          headers: { "Accept" => "text/vnd.turbo-stream.html" }
 
