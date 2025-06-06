@@ -60,11 +60,25 @@ class GameTest < ActiveSupport::TestCase
     assert_equal 0, game.accuracy_percentage
   end
 
-  test "current_round should return incomplete round or create new one" do
+  test "should have current_round association" do
     game = games(:new_game)
-    round = game.current_round
-    assert_instance_of Round, round
-    assert_equal game, round.game
+    assert_respond_to game, :current_round
+    # current_round association should return the round with no guesses
+    assert_not_nil game.current_round
+    assert_equal rounds(:current_round), game.current_round
+  end
+
+  test "create_next_round! should create a new round" do
+    game = Game.create!
+    # Remove the auto-created round to test create_next_round! cleanly
+    game.rounds.destroy_all
+
+    assert_difference "game.rounds.count", 1 do
+      round = game.create_next_round!
+      assert_instance_of Round, round
+      assert_equal game, round.game
+      assert_not_nil round.headline
+    end
   end
 
   test "should have many guesses through rounds" do

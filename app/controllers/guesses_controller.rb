@@ -2,11 +2,13 @@ class GuessesController < ApplicationController
   before_action :set_game
 
   def new
-    @guess = @game.current_round.guesses.build
+    @current_round = @game.current_round || @game.create_next_round!
+    @guess = @current_round.guesses.build
   end
 
   def create
-    @guess = @game.current_round.guesses.build(guess_params)
+    current_round = @game.current_round || @game.create_next_round!
+    @guess = current_round.guesses.build(guess_params)
 
     if @guess.save
       respond_to do |format|

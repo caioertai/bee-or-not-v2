@@ -24,18 +24,14 @@ class Game < ApplicationRecord
     (correct_rounds.to_f / total_rounds * 100).round(1)
   end
 
-  def current_round
-    super || create_next_round
+  def create_next_round!
+    headline = Headline.order("RANDOM()").first
+    rounds.create!(headline: headline)
   end
 
   private
 
   def create_first_round
-    create_next_round
-  end
-
-  def create_next_round
-    headline = Headline.order("RANDOM()").first
-    rounds.create!(headline: headline)
+    create_next_round!
   end
 end
