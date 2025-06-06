@@ -35,13 +35,10 @@ class GuessesController < ApplicationController
   def set_game
     @game = Game.includes(current_round: [ :headline, :guesses ]).find(params[:game_id])
 
-    if @game.current_round.nil?
-      if @game.completed?
-        redirect_to game_path(@game) and return
-      else
-        @game.create_next_round!
-      end
-    end
+    return unless @game.current_round.nil?
+    return redirect_to game_path(@game) if @game.completed?
+
+    @game.create_next_round!
   end
 
   def guess_params
