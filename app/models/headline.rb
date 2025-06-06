@@ -2,8 +2,8 @@ class Headline < ApplicationRecord
   validates :content, presence: true, length: { minimum: 10, maximum: 500 }
   validates :real, inclusion: { in: [ true, false ] }
 
-  scope :real_headlines, -> { where(real: true) }
-  scope :fake_headlines, -> { where(real: false) }
+  scope :real, -> { where(real: true) }
+  scope :fake, -> { where(real: false) }
 
   def source_url
     # Placeholder implementation - will be replaced with actual DB field later

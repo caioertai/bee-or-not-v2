@@ -23,12 +23,6 @@ class GameTest < ActiveSupport::TestCase
     assert game.rounds.count > 0
   end
 
-  test "should create first round after creation" do
-    assert_difference "Round.count", 1 do
-      Game.create!
-    end
-  end
-
   test "total_rounds should return count of completed rounds" do
     game = games(:active_game)
     # Total rounds should count rounds that have guesses

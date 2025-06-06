@@ -48,14 +48,14 @@ class HeadlineTest < ActiveSupport::TestCase
     assert url.include?(headline.id.to_s)
   end
 
-  test "real_headlines scope should return only real headlines" do
-    real_count = Headline.real_headlines.count
+  test "real scope should return only real headlines" do
+    real_count = Headline.real.count
     total_real = Headline.where(real: true).count
     assert_equal total_real, real_count
   end
 
-  test "fake_headlines scope should return only fake headlines" do
-    fake_count = Headline.fake_headlines.count
+  test "fake scope should return only fake headlines" do
+    fake_count = Headline.fake.count
     total_fake = Headline.where(real: false).count
     assert_equal total_fake, fake_count
   end

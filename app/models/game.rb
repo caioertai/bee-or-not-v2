@@ -3,8 +3,6 @@ class Game < ApplicationRecord
   has_many :guesses, through: :rounds
   has_one :current_round, -> { where.missing(:guesses).order(:created_at) }, class_name: "Round", inverse_of: :game
 
-  after_create :create_first_round
-
   def total_rounds
     rounds.joins(:guesses).distinct.count
   end
@@ -26,11 +24,5 @@ class Game < ApplicationRecord
   def create_next_round!
     headline = Headline.order("RANDOM()").first
     self.current_round = rounds.create!(headline: headline)
-  end
-
-  private
-
-  def create_first_round
-    create_next_round!
   end
 end

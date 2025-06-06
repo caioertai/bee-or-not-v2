@@ -33,4 +33,4 @@ fake_headlines.each do |content|
   Headline.find_or_create_by!(content: content, real: false)
 end
 
-puts "Seeded #{Headline.count} headlines (#{Headline.real_headlines.count} real, #{Headline.fake_headlines.count} fake)"
+puts "Seeded #{Headline.count} headlines (#{Headline.real.count} real, #{Headline.fake.count} fake)"
