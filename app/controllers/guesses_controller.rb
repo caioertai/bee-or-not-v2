@@ -14,10 +14,14 @@ class GuessesController < ApplicationController
 
       respond_to do |format|
         format.turbo_stream do
-          render turbo_stream: [
-            turbo_stream.replace("round-content", partial: "guesses/feedback", locals: { guess: @guess }),
-            turbo_stream.replace("game-stats", partial: "games/stats", locals: { game: @game })
-          ]
+          if @game.completed?
+            redirect_to(@game)
+          else
+            render turbo_stream: [
+              turbo_stream.replace("round-content", partial: "guesses/feedback", locals: { guess: @guess }),
+              turbo_stream.replace("game-stats", partial: "games/stats", locals: { game: @game })
+            ]
+          end
         end
         format.html do
           @game.completed? ? redirect_to(@game) : redirect_to(new_game_guess_path(@game))

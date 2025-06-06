@@ -95,7 +95,7 @@ class GuessesControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to game_path(@game)
   end
 
-  test "should show completion message in turbo stream when game is completed" do
+  test "should redirect to game completion page in turbo stream when game is completed" do
     # Use all headlines except one
     all_headlines = Headline.all
     used_headlines = all_headlines.first(all_headlines.count - 1)
@@ -114,8 +114,7 @@ class GuessesControllerTest < ActionDispatch::IntegrationTest
          params: { guess: { real: true } },
          headers: { "Accept" => "text/vnd.turbo-stream.html" }
 
-    assert_response :success
-    assert_includes response.body, "No more headlines left!"
-    assert_includes response.body, "Thanks for playing!"
+    assert_response :redirect
+    assert_redirected_to game_path(@game)
   end
 end

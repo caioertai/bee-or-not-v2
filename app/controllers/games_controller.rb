@@ -15,11 +15,6 @@ class GamesController < ApplicationController
 
   def show
     @players = @game.players.order(:created_at)
-
-    respond_to do |format|
-      format.html
-      format.turbo_stream
-    end
   end
 
   private
