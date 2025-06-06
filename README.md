@@ -14,6 +14,8 @@ Players are presented with headlines and must decide whether they're REAL (from 
 - **Comprehensive Scoring**: Track accuracy, total rounds, and correct guesses
 - **Source Verification**: Links to verify real headlines (placeholder implementation)
 - **Performance Metrics**: Motivational feedback based on accuracy percentage
+- **Smart Headline Management**: No headline repetition within games, natural completion when exhausted
+- **Optimized Performance**: Subquery-based headline selection for scalable gameplay
 
 ## 🛠️ Technical Stack
 
@@ -85,6 +87,9 @@ bin/rails db:reset
 - **Boolean Guess Field**: Clean `real` boolean instead of string values
 - **Explicit Round Creation**: Prevents side effects and improves testability
 - **ActiveRecord Associations**: Proper has_many/belongs_to relationships
+- **Headline Uniqueness**: Subquery-based selection prevents repetition within games
+- **Natural Game Completion**: Games end gracefully when all headlines are exhausted
+- **Controller Simplicity**: Guard clauses and minimal instance variables (2-ivar rule)
 
 
 ## 🧪 Testing
@@ -117,14 +122,14 @@ kamal deploy
 
 ### Performance & Scalability
 
-- [ ] **Optimize Headline Selection**: Replace `RANDOM()` with more scalable selection algorithm
-- [ ] **Add Headline Tracking**: Prevent users from seeing repeated headlines in same session
+- [x] **~~Optimize Headline Selection~~**: ✅ Implemented subquery-based selection for better performance
+- [x] **~~Add Headline Tracking~~**: ✅ Prevent users from seeing repeated headlines in same session
 - [ ] **Score Calculation Caching**: Implement caching for expensive aggregation queries
 - [ ] **Database Pagination**: Add pagination for large headline datasets
 
 ### Game Features
 
-- [ ] **Game Completion Logic**: Add round limits or natural end states
+- [x] **~~Game Completion Logic~~**: ✅ Added natural end states when all headlines are exhausted
 - [ ] **Difficulty Levels**: Implement easy/medium/hard headline categories
 - [ ] **Game Modes**: Add timed rounds, category-specific games, multiplayer challenges
 - [ ] **Progress Tracking**: Visual progress bars and round counters
