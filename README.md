@@ -12,7 +12,7 @@ Players are presented with headlines and must decide whether they're REAL (from 
 - **Real-time Interactions**: Turbo Streams for seamless gameplay without page reloads
 - **Mobile-first Design**: Responsive layout optimized for all devices
 - **Comprehensive Scoring**: Track accuracy, total rounds, and correct guesses
-- **Source Verification**: Links to verify real headlines (placeholder implementation)
+- **Source Verification**: Direct links to original articles for verification
 - **Performance Metrics**: Motivational feedback based on accuracy percentage
 - **Smart Headline Management**: No headline repetition within games, natural completion when exhausted
 - **Optimized Performance**: Subquery-based headline selection for scalable gameplay
@@ -65,11 +65,14 @@ COVERAGE=true bin/rails test
 
 ### Database Setup
 
-The application includes seed data with 10 curated headlines (5 real, 5 fake):
+The application includes seed data with 10 curated headlines (5 real from Reuters, 5 fake from Babylon Bee):
 
 ```bash
 # Reset and seed the database
 bin/rails db:reset
+
+# Scrape fresh Babylon Bee headlines
+bin/rails scraper:babylon_bee
 ```
 
 ## 🏗️ Architecture
@@ -79,7 +82,8 @@ bin/rails db:reset
 - **Game**: Tracks overall game state and statistics
 - **Round**: Individual headline presentation with associated guesses
 - **Guess**: User's decision (real/fake) with correctness calculation
-- **Headline**: News content with real/fake classification
+- **Headline**: News content with real/fake classification and source URL
+- **Source**: News publication metadata (Reuters, Babylon Bee, etc.)
 
 ### Key Design Decisions
 
@@ -113,12 +117,20 @@ kamal deploy
 
 ## 📋 TODO
 
+### Completed Features ✅
+
+- [x] **~~Fix Source URLs~~**: ✅ Implemented source_url database field with proper validation
+- [x] **~~Source Management~~**: ✅ Added Source model with proper associations and constraints
+- [x] **~~Automated Content~~**: ✅ Babylon Bee scraper for fresh satirical headlines
+
 ### Near-term Improvements
 
-- [ ] **Fix Source URLs**: Replace placeholder URLs with real source_url database field
-- [ ] **Add Database Constraints**: Implement check constraints for content length and boolean validation
+- [ ] **Scraper Resilience**: Add retry logic and better error handling for API changes
+- [ ] **Rate Limiting**: Implement delays and respect robots.txt for scraping
+- [ ] **More News Sources**: Add scrapers for additional real news sources (BBC, CNN, etc.)
+- [ ] **Background Processing**: Move scraping to async jobs with Sidekiq
+- [ ] **Database Constraints**: Add check constraints for content length validation
 - [ ] **Improve Error Handling**: Add proper 404 pages and error recovery
-- [ ] **Content Uniqueness**: Add validation to prevent duplicate headlines
 
 ### Performance & Scalability
 
@@ -126,6 +138,8 @@ kamal deploy
 - [x] **~~Add Headline Tracking~~**: ✅ Prevent users from seeing repeated headlines in same session
 - [ ] **Score Calculation Caching**: Implement caching for expensive aggregation queries
 - [ ] **Database Pagination**: Add pagination for large headline datasets
+- [ ] **Scraper Monitoring**: Add health checks and alerting for scraper failures
+- [ ] **Database Indexes**: Optimize queries with proper indexing strategy
 
 ### Game Features
 
@@ -145,10 +159,12 @@ kamal deploy
 
 ### Technical Enhancements
 
+- [ ] **Scraper Configuration**: Move hardcoded URLs to Rails configuration files
+- [ ] **API Monitoring**: Track Babylon Bee API changes and health
 - [ ] **Real-time Multiplayer**: WebSocket-based multiplayer games
 - [ ] **Mobile App**: React Native or PWA implementation
 - [ ] **Analytics Integration**: Track user behavior and headline effectiveness
-- [ ] **Content Management**: Admin interface for managing headlines
+- [ ] **Content Management**: Admin interface for managing headlines and sources
 - [ ] **API Development**: REST API for mobile apps and integrations
 
 ### Infrastructure
