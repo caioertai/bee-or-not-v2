@@ -23,13 +23,13 @@ module Scrapers
 
     def load_config(config_key)
       config_file = Rails.root.join("config", "scrapers.yml")
-      
+
       unless File.exist?(config_file)
         raise "Scraper configuration file not found: #{config_file}"
       end
 
       yaml_config = YAML.load_file(config_file)[Rails.env.to_s]
-      
+
       unless yaml_config && yaml_config[config_key.to_s]
         raise "Scraper configuration not found for key: #{config_key} in environment: #{Rails.env}"
       end
@@ -54,7 +54,7 @@ module Scrapers
 
       Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == "https") do |http|
         request = Net::HTTP::Post.new(uri)
-        
+
         # Set headers from configuration
         request["User-Agent"] = @config["user_agent"]
         request["Content-Type"] = @config["headers"]["content_type"]
@@ -74,7 +74,7 @@ module Scrapers
         request_data = @config["request_params"].dup
         request_data["skip"] = skip
         request_data["isAuthor"] = request_data.delete("is_author")  # Convert snake_case to camelCase
-        
+
         request.body = request_data.to_json
 
         http.request(request)
