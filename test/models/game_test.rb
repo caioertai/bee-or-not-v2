@@ -171,4 +171,50 @@ class GameTest < ActiveSupport::TestCase
     assert_respond_to game, :available_headlines
     assert_kind_of ActiveRecord::Relation, game.available_headlines
   end
+
+  # Multiplayer tests
+  test "should have many players through game_players" do
+    game = games(:one)
+    assert_respond_to game, :players
+    assert game.players.any?
+    assert_includes game.players, players(:alice)
+    assert_includes game.players, players(:bob)
+  end
+
+  test "add_player! should add a player to the game" do
+    game = Game.create!
+    player = players(:alice)
+
+    assert_difference "game.players.count", 1 do
+      game.add_player!(player)
+    end
+
+    assert_includes game.players, player
+  end
+
+  test "add_player! should not duplicate existing players" do
+    game = games(:one)
+    player = players(:alice)
+
+    assert_no_difference "game.players.count" do
+      game.add_player!(player)
+    end
+  end
+
+  test "should generate QR code" do
+    game = games(:one)
+    qr_code = game.qr_code
+
+    assert_not_nil qr_code
+    assert_includes qr_code, "<svg"
+    assert_includes qr_code, "games/#{game.id}/join"
+  end
+
+  test "should generate join URL" do
+    game = games(:one)
+    join_url = game.join_url
+
+    assert_not_nil join_url
+    assert_includes join_url, "games/#{game.id}/join"
+  end
 end

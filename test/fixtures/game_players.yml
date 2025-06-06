@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+alice_game_one:
+  game: one
+  player: alice
+
+bob_game_one:
+  game: one
+  player: bob
+
+alice_active_game:
+  game: active_game
+  player: alice
+
+bob_active_game:
+  game: active_game
+  player: bob

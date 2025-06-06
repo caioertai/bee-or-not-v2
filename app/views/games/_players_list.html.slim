@@ -1,0 +1,10 @@
+- if players.any?
+  .space-y-2
+    - players.each do |player|
+      .flex.items-center.justify-between.p-2.bg-gray-50.rounded-lg
+        .flex.items-center.space-x-2
+          .w-2.h-2.bg-green-400.rounded-full title="Online"
+          .text-sm.font-medium.text-gray-800 = player.name
+        .text-xs.text-gray-500 = time_ago_in_words(player.created_at) + " ago"
+- else
+  .text-sm.text-gray-500.italic No players yet

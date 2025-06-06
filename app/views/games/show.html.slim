@@ -1,27 +1,51 @@
 .min-h-screen.bg-gradient-to-br.from-blue-50.to-indigo-100.flex.items-center.justify-center.px-4
-  .max-w-lg.mx-auto.text-center
-    .bg-white.rounded-lg.shadow-lg.p-8
-      .text-6xl.mb-6 🎯
-      h1.text-3xl.font-bold.text-gray-900.mb-6 Game Complete!
+  .max-w-4xl.mx-auto
+    .grid.grid-cols-1.lg:grid-cols-3.gap-6
+      / Game results (main content)
+      .lg:col-span-2
+        .bg-white.rounded-lg.shadow-lg.p-8.text-center
+          .text-6xl.mb-6 🎯
+          h1.text-3xl.font-bold.text-gray-900.mb-6 Game Complete!
+          
+          .mb-8.space-y-4
+            .bg-blue-50.rounded-lg.p-6
+              .text-3xl.font-bold.text-blue-600.mb-2 = @game.score
+              .text-lg.text-blue-800 out of #{@game.total_rounds} correct
+              .text-2xl.font-bold.text-blue-600.mt-2 = number_to_percentage(@game.accuracy_ratio * 100, precision: 1)
+              .text-sm.text-blue-600 accuracy
+            
+            - if @game.accuracy_ratio >= 0.8
+              .text-green-600.font-semibold 🏆 Excellent! You're great at spotting fake news!
+            - elsif @game.accuracy_ratio >= 0.6
+              .text-yellow-600.font-semibold 👍 Good job! Keep practicing to improve your skills.
+            - else
+              .text-red-600.font-semibold 🤔 Keep practicing! Fake news detection takes time to master.
+          
+          .space-y-4
+            = link_to "Play Again", new_game_path, 
+                      class: "block w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 text-lg"
+            
+            = link_to "← Back to Home", root_path, 
+                      class: "block w-full border-2 border-gray-300 hover:border-gray-400 text-gray-700 font-bold py-3 px-6 rounded-lg transition-colors duration-200"
       
-      .mb-8.space-y-4
-        .bg-blue-50.rounded-lg.p-6
-          .text-3xl.font-bold.text-blue-600.mb-2 = @game.score
-          .text-lg.text-blue-800 out of #{@game.total_rounds} correct
-          .text-2xl.font-bold.text-blue-600.mt-2 = number_to_percentage(@game.accuracy_ratio * 100, precision: 1)
-          .text-sm.text-blue-600 accuracy
-        
-        - if @game.accuracy_ratio >= 0.8
-          .text-green-600.font-semibold 🏆 Excellent! You're great at spotting fake news!
-        - elsif @game.accuracy_ratio >= 0.6
-          .text-yellow-600.font-semibold 👍 Good job! Keep practicing to improve your skills.
-        - else
-          .text-red-600.font-semibold 🤔 Keep practicing! Fake news detection takes time to master.
-      
-      .space-y-4
-        = link_to "Play Again", new_game_path, 
-                  class: "block w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 text-lg"
-        
-        = link_to "← Back to Home", root_path, 
-                  class: "block w-full border-2 border-gray-300 hover:border-gray-400 text-gray-700 font-bold py-3 px-6 rounded-lg transition-colors duration-200"
-      
+      / Multiplayer sidebar
+      .lg:col-span-1
+        .bg-white.rounded-lg.shadow-lg.p-6
+          h3.text-xl.font-bold.text-gray-900.mb-4 🏟️ Multiplayer
+          
+          / QR Code for sharing
+          .mb-6.text-center
+            .mb-2.text-sm.text-gray-600 Share this game:
+            .inline-block.p-2.bg-white.border.rounded-lg = @game.qr_code
+            .text-xs.text-gray-500.mt-2 Scan to join this game
+          
+          / Players list
+          .mb-4
+            h4.text-lg.font-semibold.text-gray-800.mb-2 Players (#{@players.count})
+            div id="players_list"
+              = render "players_list", players: @players
+          
+          / Join URL
+          .text-center
+            = link_to "Join Game", join_game_path(@game), 
+                      class: "inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors duration-200 text-sm"
