@@ -3,12 +3,14 @@ class Game < ApplicationRecord
 
   validates :score, presence: true, numericality: { greater_than_or_equal_to: 0 }
 
+  after_create :create_first_round
+
   def total_rounds
-    rounds.count
+    rounds.where.not(guesses: { id: nil }).joins(:guesses).distinct.count
   end
 
   def correct_rounds
-    rounds.where(correct: true).count
+    rounds.joins(:guesses).where(guesses: { correct: true }).distinct.count
   end
 
   def accuracy_percentage
@@ -18,10 +20,21 @@ class Game < ApplicationRecord
   end
 
   def current_round
-    @current_round ||= rounds.build
+    rounds.includes(:guesses).find { |round| !round.completed? } || create_next_round
   end
 
   def increment_score!
     increment!(:score)
+  end
+
+  private
+
+  def create_first_round
+    create_next_round
+  end
+
+  def create_next_round
+    headline = Headline.order("RANDOM()").first
+    rounds.create!(headline: headline)
   end
 end

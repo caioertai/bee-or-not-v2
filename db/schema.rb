@@ -10,11 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_05_225558) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_05_234223) do
   create_table "games", force: :cascade do |t|
     t.integer "score", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "guesses", force: :cascade do |t|
+    t.integer "round_id", null: false
+    t.string "user_guess", null: false
+    t.boolean "correct", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["round_id", "created_at"], name: "index_guesses_on_round_id_and_created_at"
+    t.index ["round_id"], name: "index_guesses_on_round_id"
   end
 
   create_table "headlines", force: :cascade do |t|
@@ -28,8 +38,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_05_225558) do
   create_table "rounds", force: :cascade do |t|
     t.integer "game_id", null: false
     t.integer "headline_id", null: false
-    t.string "user_guess", null: false
-    t.boolean "correct", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["game_id", "created_at"], name: "index_rounds_on_game_id_and_created_at"
@@ -37,6 +45,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_05_225558) do
     t.index ["headline_id"], name: "index_rounds_on_headline_id"
   end
 
+  add_foreign_key "guesses", "rounds"
   add_foreign_key "rounds", "games"
   add_foreign_key "rounds", "headlines"
 end

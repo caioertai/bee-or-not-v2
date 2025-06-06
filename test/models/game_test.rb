@@ -13,14 +13,22 @@ class GameTest < ActiveSupport::TestCase
     assert game.rounds.count > 0
   end
 
-  test "total_rounds should return count of rounds" do
+  test "should create first round after creation" do
+    assert_difference "Round.count", 1 do
+      Game.create!
+    end
+  end
+
+  test "total_rounds should return count of completed rounds" do
     game = games(:active_game)
-    assert_equal game.rounds.count, game.total_rounds
+    # Total rounds should count rounds that have guesses
+    expected_total = game.rounds.joins(:guesses).distinct.count
+    assert_equal expected_total, game.total_rounds
   end
 
   test "correct_rounds should return count of correct rounds" do
     game = games(:active_game)
-    expected_correct = game.rounds.where(correct: true).count
+    expected_correct = game.rounds.joins(:guesses).where(guesses: { correct: true }).distinct.count
     assert_equal expected_correct, game.correct_rounds
   end
 
@@ -37,16 +45,15 @@ class GameTest < ActiveSupport::TestCase
     end
   end
 
-  test "accuracy_percentage should return 0 for no rounds" do
+  test "accuracy_percentage should return 0 for no completed rounds" do
     game = games(:new_game)
     assert_equal 0, game.accuracy_percentage
   end
 
-  test "current_round should return a new round" do
+  test "current_round should return incomplete round or create new one" do
     game = games(:new_game)
     round = game.current_round
     assert_instance_of Round, round
-    assert round.new_record?
     assert_equal game, round.game
   end
 

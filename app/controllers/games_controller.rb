@@ -6,8 +6,8 @@ class GamesController < ApplicationController
   def create
     @game = Game.create!
 
-    # Start the first round
-    redirect_to new_game_round_path(@game)
+    # Start the first guess
+    redirect_to new_game_guess_path(@game)
   end
 
   def show

@@ -1,25 +1,17 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-correct_real_guess:
+round_with_correct_guess:
   game: active_game
   headline: real_headline
-  user_guess: real
-  correct: true
 
-incorrect_real_guess:
-  game: active_game
-  headline: real_headline
-  user_guess: fake
-  correct: false
-
-correct_fake_guess:
+round_with_incorrect_guess:
   game: active_game
   headline: fake_headline
-  user_guess: fake
-  correct: true
 
-incorrect_fake_guess:
+round_for_completed_game:
   game: completed_game
   headline: fake_headline
-  user_guess: real
-  correct: false
+
+current_round:
+  game: new_game
+  headline: real_headline

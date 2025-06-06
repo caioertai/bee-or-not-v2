@@ -7,14 +7,14 @@ class GamesControllerTest < ActionDispatch::IntegrationTest
     assert_select "h1", "🐝 Ready to Play?"
   end
 
-  test "should create game and redirect to first round" do
+  test "should create game and redirect to first guess" do
     assert_difference "Game.count", 1 do
       post games_url
     end
 
     game = Game.last
     assert_response :redirect
-    assert_redirected_to new_game_round_path(game)
+    assert_redirected_to new_game_guess_path(game)
   end
 
   test "should show game stats" do
