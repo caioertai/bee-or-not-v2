@@ -86,50 +86,16 @@ bin/rails db:reset
 - **Explicit Round Creation**: Prevents side effects and improves testability
 - **ActiveRecord Associations**: Proper has_many/belongs_to relationships
 
-### Database Schema
-
-```ruby
-# Games: Simple session tracking
-create_table "games" do |t|
-  t.timestamps
-end
-
-# Headlines: Content with reality classification  
-create_table "headlines" do |t|
-  t.string :content, null: false
-  t.boolean :real, null: false
-  t.timestamps
-end
-
-# Rounds: Link games to specific headlines
-create_table "rounds" do |t|
-  t.references :game, foreign_key: true
-  t.references :headline, foreign_key: true
-  t.timestamps
-end
-
-# Guesses: User decisions with boolean real/fake
-create_table "guesses" do |t|
-  t.references :round, foreign_key: true
-  t.boolean :real
-  t.timestamps
-end
-```
 
 ## 🧪 Testing
 
-Comprehensive test suite with 44 tests covering:
+Comprehensive test suite covering:
 
 - **Model validations and business logic**
 - **Controller actions and responses**
 - **Turbo Stream interactions**
 - **Integration workflows**
 - **Edge cases and error handling**
-
-```bash
-# Test results
-44 runs, 97 assertions, 0 failures, 0 errors, 0 skips
-```
 
 ## 🚦 Deployment
 
@@ -188,20 +154,6 @@ kamal deploy
 - [ ] **CDN Integration**: Asset delivery optimization
 - [ ] **Database Optimization**: Connection pooling and query optimization
 
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes
-4. Add tests for new functionality
-5. Ensure all tests pass (`bin/rails test`)
-6. Commit your changes (`git commit -m 'Add amazing feature'`)
-7. Push to the branch (`git push origin feature/amazing-feature`)
-8. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 
