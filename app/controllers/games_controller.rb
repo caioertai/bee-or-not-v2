@@ -12,6 +12,5 @@ class GamesController < ApplicationController
 
   def show
     @game = Game.find(params[:id])
-    @total_headlines = Headline.count
   end
 end
