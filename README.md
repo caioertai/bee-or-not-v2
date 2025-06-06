@@ -63,6 +63,18 @@ bin/rails test
 COVERAGE=true bin/rails test
 ```
 
+### Code Quality
+
+The project includes automated quality checks via [Overcommit](https://github.com/sds/overcommit):
+
+```bash
+# Manual quality checks
+bin/rubocop                 # Code style and linting
+bin/brakeman                # Security vulnerability scanning
+```
+
+**Automatic Enforcement**: Git hooks automatically run RuboCop and Brakeman before every push, blocking pushes that fail quality or security checks. These hooks are installed automatically when you run `bundle install` - no manual setup required!
+
 ### Database Setup
 
 The application includes seed data with 10 curated headlines (5 real from Reuters, 5 fake from Babylon Bee):
