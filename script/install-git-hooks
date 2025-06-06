@@ -1,0 +1,61 @@
+#!/bin/bash
+#
+# Install git hooks for code quality enforcement
+#
+
+echo "🔧 Installing git hooks..."
+
+# Create pre-push hook
+cat > .git/hooks/pre-push << 'EOF'
+#!/bin/bash
+#
+# Git pre-push hook to enforce code quality standards
+# Runs RuboCop and Brakeman before allowing push
+#
+
+echo "🔍 Running code quality checks before push..."
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+# Function to print colored output
+print_status() {
+    echo -e "${2}${1}${NC}"
+}
+
+# Check if we're in a Rails project
+if [ ! -f "Gemfile" ] || ! grep -q "rails" Gemfile; then
+    print_status "⚠️  Not a Rails project, skipping quality checks" $YELLOW
+    exit 0
+fi
+
+# RuboCop check
+print_status "🔧 Running RuboCop..." $YELLOW
+if ! bundle exec rubocop; then
+    print_status "❌ RuboCop failed! Run 'bin/rubocop -A' to auto-fix issues." $RED
+    print_status "Push aborted." $RED
+    exit 1
+fi
+print_status "✅ RuboCop passed!" $GREEN
+
+# Brakeman security check
+print_status "🔒 Running Brakeman security scan..." $YELLOW
+if ! bundle exec brakeman --quiet --no-pager; then
+    print_status "❌ Brakeman found security issues! Review and fix before pushing." $RED
+    print_status "Push aborted." $RED
+    exit 1
+fi
+print_status "✅ Brakeman security scan passed!" $GREEN
+
+print_status "🎉 All quality checks passed! Proceeding with push..." $GREEN
+EOF
+
+# Make hook executable
+chmod +x .git/hooks/pre-push
+
+echo "✅ Git hooks installed successfully!"
+echo "💡 The pre-push hook will now run RuboCop and Brakeman before every push."
+echo "🚫 Pushes will be blocked if either tool finds issues."
