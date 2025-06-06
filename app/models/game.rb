@@ -8,11 +8,21 @@ class Game < ApplicationRecord
   end
 
   def correct_rounds
-    rounds.joins(:guesses).where(guesses: { correct: true }).distinct.count
+    rounds.joins(guesses: { round: :headline })
+          .where(
+            "(guesses.user_guess = 'real' AND headlines.real = true) OR " \
+            "(guesses.user_guess = 'fake' AND headlines.real = false)"
+          )
+          .distinct.count
   end
 
   def score
-    guesses.where(correct: true).count
+    guesses.joins(round: :headline)
+           .where(
+             "(guesses.user_guess = 'real' AND headlines.real = true) OR " \
+             "(guesses.user_guess = 'fake' AND headlines.real = false)"
+           )
+           .count
   end
 
   def accuracy_ratio

@@ -8,7 +8,12 @@ class GameTest < ActiveSupport::TestCase
 
   test "score should return count of correct guesses" do
     game = games(:active_game)
-    expected_score = game.guesses.where(correct: true).count
+    expected_score = game.guesses.joins(round: :headline)
+                         .where(
+                           "(guesses.user_guess = 'real' AND headlines.real = true) OR " \
+                           "(guesses.user_guess = 'fake' AND headlines.real = false)"
+                         )
+                         .count
     assert_equal expected_score, game.score
   end
 
@@ -32,7 +37,12 @@ class GameTest < ActiveSupport::TestCase
 
   test "correct_rounds should return count of correct rounds" do
     game = games(:active_game)
-    expected_correct = game.rounds.joins(:guesses).where(guesses: { correct: true }).distinct.count
+    expected_correct = game.rounds.joins(guesses: { round: :headline })
+                           .where(
+                             "(guesses.user_guess = 'real' AND headlines.real = true) OR " \
+                             "(guesses.user_guess = 'fake' AND headlines.real = false)"
+                           )
+                           .distinct.count
     assert_equal expected_correct, game.correct_rounds
   end
 

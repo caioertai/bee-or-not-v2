@@ -25,18 +25,16 @@ class GuessTest < ActiveSupport::TestCase
     assert guess.valid?
   end
 
-  test "should calculate correctness before save" do
+  test "correct? should return true when guess matches headline reality" do
     round = rounds(:current_round)
     real_headline = round.headline  # This is real_headline from fixtures
 
     # Correct guess for real headline
     correct_guess = Guess.new(round: round, user_guess: "real")
-    correct_guess.save!
     assert correct_guess.correct?
 
     # Incorrect guess for real headline
     incorrect_guess = Guess.new(round: round, user_guess: "fake")
-    incorrect_guess.save!
     assert_not incorrect_guess.correct?
   end
 
