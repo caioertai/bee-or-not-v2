@@ -28,6 +28,7 @@ class GuessesController < ApplicationController
 
   def set_game
     @game = Game.includes(current_round: [ :headline, :guesses ]).find(params[:game_id])
+    @game.create_next_round! if @game.current_round.nil?
   end
 
   def guess_params

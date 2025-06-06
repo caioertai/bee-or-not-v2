@@ -26,7 +26,7 @@ class Game < ApplicationRecord
 
   def create_next_round!
     headline = Headline.order("RANDOM()").first
-    rounds.create!(headline: headline)
+    self.current_round = rounds.create!(headline: headline)
   end
 
   private

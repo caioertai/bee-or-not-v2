@@ -13,6 +13,15 @@ class GuessesControllerTest < ActionDispatch::IntegrationTest
     assert_select "button", /FAKE/
   end
 
+  test "should create a new round if there is no current round" do
+    @game.rounds.destroy_all
+    get new_game_guess_url(@game)
+    assert_response :success
+    assert_select "h1", /Headline \d+/
+    assert_select "button", /REAL/
+    assert_select "button", /FAKE/
+  end
+
   test "should create guess with correct answer" do
     # Create a round for the game first with a specific headline
     round = @game.rounds.create!(headline: headlines(:real_headline))
@@ -43,9 +52,6 @@ class GuessesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should respond with turbo stream" do
-    # Create a round for the game first
-    @game.create_next_round!
-
     post game_guess_url(@game),
          params: {
            guess: { user_guess: "real" }

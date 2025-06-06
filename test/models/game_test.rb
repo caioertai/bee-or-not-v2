@@ -81,6 +81,13 @@ class GameTest < ActiveSupport::TestCase
     end
   end
 
+  test "#create_next_round! should set the current_round to the new round" do
+    game = Game.create!
+    game.rounds.destroy_all
+    game.create_next_round!
+    assert_equal game.current_round, game.rounds.last
+  end
+
   test "should have many guesses through rounds" do
     game = games(:active_game)
     assert_respond_to game, :guesses
