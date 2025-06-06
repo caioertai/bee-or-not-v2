@@ -18,7 +18,7 @@ class GuessTest < ActiveSupport::TestCase
     # Should be valid with boolean values
     guess.real = true
     assert guess.valid?
-    
+
     guess.real = false
     assert guess.valid?
   end
@@ -39,7 +39,7 @@ class GuessTest < ActiveSupport::TestCase
   test "guess_text should return proper text for boolean real value" do
     real_guess = guesses(:correct_real_guess)
     assert_equal "Real", real_guess.guess_text
-    
+
     fake_guess = guesses(:correct_fake_guess)
     assert_equal "Fake", fake_guess.guess_text
   end
