@@ -73,7 +73,8 @@ class Scrapers::BabylonBeeScraperTest < ActiveSupport::TestCase
     existing_headline = Headline.create!(
       content: "Existing Test Headline",
       real: false,
-      source: source
+      source: source,
+      source_url: "https://babylonbee.com/news/existing-test"
     )
 
     initial_count = Headline.count
@@ -83,5 +84,20 @@ class Scrapers::BabylonBeeScraperTest < ActiveSupport::TestCase
     
     assert_equal existing_headline, result
     assert_equal initial_count, Headline.count
+  end
+
+  test "should create headline with source_url" do
+    initial_count = Headline.count
+    
+    data = { 
+      content: "New Test Headline", 
+      source_url: "https://babylonbee.com/news/new-test-headline" 
+    }
+    result = @scraper.send(:create_headline, data)
+    
+    assert_not_nil result
+    assert_equal initial_count + 1, Headline.count
+    assert_equal "New Test Headline", result.content
+    assert_equal "https://babylonbee.com/news/new-test-headline", result.source_url
   end
 end

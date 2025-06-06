@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_06_055217) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_06_065632) do
   create_table "games", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -31,6 +31,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_06_055217) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "source_id", null: false
+    t.string "source_url"
     t.index ["real"], name: "index_headlines_on_real"
     t.index ["source_id"], name: "index_headlines_on_source_id"
   end

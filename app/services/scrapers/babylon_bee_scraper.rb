@@ -147,7 +147,8 @@ module Scrapers
       Headline.create!(
         content: data[:content],
         real: @source.real,
-        source: @source
+        source: @source,
+        source_url: data[:source_url]
       )
     rescue ActiveRecord::RecordInvalid => e
       Rails.logger.warn "Failed to create headline: #{e.message}"

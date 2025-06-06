@@ -41,8 +41,14 @@ class HeadlineTest < ActiveSupport::TestCase
     assert headline.fake?
   end
 
-  test "source_url should return source base_url" do
+  test "source_url should return stored source_url when present" do
     headline = headlines(:real_headline)
+    url = headline.source_url
+    assert_equal "https://reuters.com/news/scientists-discover-treatment", url
+  end
+
+  test "source_url should fallback to source base_url when not set" do
+    headline = Headline.new(content: "Test headline", real: true, source: sources(:reuters))
     url = headline.source_url
     assert_equal headline.source.base_url, url
   end

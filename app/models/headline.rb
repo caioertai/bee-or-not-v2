@@ -8,7 +8,7 @@ class Headline < ApplicationRecord
   scope :fake, -> { where(real: false) }
 
   def source_url
-    source&.base_url
+    read_attribute(:source_url) || source&.base_url
   end
 
   def real?

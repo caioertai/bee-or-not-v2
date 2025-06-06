@@ -38,18 +38,20 @@ fake_source = Source.find_or_create_by!(slug: 'babylon-bee') do |source|
 end
 
 # Create real headlines
-real_headlines.each do |content|
+real_headlines.each_with_index do |content, index|
   Headline.find_or_create_by!(content: content) do |headline|
     headline.real = true
     headline.source = real_source
+    headline.source_url = "#{real_source.base_url}/news/article-#{index + 1}"
   end
 end
 
 # Create fake headlines
-fake_headlines.each do |content|
+fake_headlines.each_with_index do |content, index|
   Headline.find_or_create_by!(content: content) do |headline|
     headline.real = false
     headline.source = fake_source
+    headline.source_url = "#{fake_source.base_url}/news/fake-article-#{index + 1}"
   end
 end
 
