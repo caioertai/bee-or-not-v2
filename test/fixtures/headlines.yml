@@ -3,15 +3,23 @@
 real_headline:
   content: "Scientists discover new treatment for common disease"
   real: true
+  source: reuters
+  source_url: "https://reuters.com/news/scientists-discover-treatment"
 
 fake_headline:
   content: "Local man discovers WiFi password was 'password123' all along"
   real: false
+  source: babylon_bee
+  source_url: "https://babylonbee.com/news/local-man-discovers-wifi-password"
 
 another_real_headline:
   content: "Technology company announces major investment in renewable energy"
   real: true
+  source: reuters
+  source_url: "https://reuters.com/news/tech-company-renewable-energy"
 
 another_fake_headline:
   content: "Researchers confirm that cats understand quantum physics"
   real: false
+  source: babylon_bee
+  source_url: "https://babylonbee.com/news/cats-understand-quantum-physics"

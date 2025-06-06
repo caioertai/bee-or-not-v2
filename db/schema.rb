@@ -19,7 +19,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_06_192410) do
     t.index ["game_id"], name: "index_game_players_on_game_id"
     t.index ["player_id"], name: "index_game_players_on_player_id"
   end
-
   create_table "games", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -39,7 +38,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_06_192410) do
     t.boolean "real", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "source_id", null: false
+    t.string "source_url", null: false
     t.index ["real"], name: "index_headlines_on_real"
+    t.index ["source_id"], name: "index_headlines_on_source_id"
   end
 
   create_table "players", force: :cascade do |t|
@@ -60,9 +62,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_06_192410) do
     t.index ["headline_id"], name: "index_rounds_on_headline_id"
   end
 
+  create_table "sources", force: :cascade do |t|
+    t.string "base_url"
+    t.string "slug"
+    t.string "name"
+    t.boolean "real"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   add_foreign_key "game_players", "games"
   add_foreign_key "game_players", "players"
   add_foreign_key "guesses", "rounds"
+  add_foreign_key "headlines", "sources"
   add_foreign_key "rounds", "games"
   add_foreign_key "rounds", "headlines"
 end
