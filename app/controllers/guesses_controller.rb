@@ -12,11 +12,13 @@ class GuessesController < ApplicationController
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: [
-            turbo_stream.replace("round-content", partial: "guesses/feedback", locals: { guess: @guess, game: @game }),
+            turbo_stream.replace("round-content", partial: "guesses/feedback", locals: { guess: @guess }),
             turbo_stream.replace("game-stats", partial: "games/stats", locals: { game: @game })
           ]
         end
-        format.html { redirect_to new_game_guess_path(@game) }
+        format.html do
+          @game.completed? ? redirect_to(@game) : redirect_to(new_game_guess_path(@game))
+        end
       end
     else
       render :new, status: :unprocessable_entity
@@ -28,7 +30,11 @@ class GuessesController < ApplicationController
 
   def set_game
     @game = Game.includes(current_round: [ :headline, :guesses ]).find(params[:game_id])
-    @game.create_next_round! if @game.current_round.nil?
+
+    return unless @game.current_round.nil?
+    return redirect_to game_path(@game) if @game.completed?
+
+    @game.create_next_round!
   end
 
   def guess_params

@@ -2,6 +2,9 @@ class Game < ApplicationRecord
   has_many :rounds, dependent: :destroy
   has_many :guesses, through: :rounds
   has_one :current_round, -> { where.missing(:guesses).order(:created_at) }, class_name: "Round", inverse_of: :game
+  def available_headlines
+    Headline.where.not(id: rounds.select(:headline_id))
+  end
 
   def total_rounds
     rounds.joins(:guesses).distinct.count
@@ -26,7 +29,13 @@ class Game < ApplicationRecord
   end
 
   def create_next_round!
-    headline = Headline.order("RANDOM()").first
-    self.current_round = rounds.create!(headline: headline)
+    available_headline = available_headlines.order("RANDOM()").first
+    return nil unless available_headline
+
+    self.current_round = rounds.create!(headline: available_headline)
+  end
+
+  def completed?
+    available_headlines.empty?
   end
 end

@@ -1,5 +1,6 @@
 class Guess < ApplicationRecord
   belongs_to :round
+  has_one :game, through: :round
 
   validates :real, inclusion: { in: [ true, false ] }
 
