@@ -19,6 +19,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_06_192410) do
     t.index ["game_id"], name: "index_game_players_on_game_id"
     t.index ["player_id"], name: "index_game_players_on_player_id"
   end
+
   create_table "games", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
