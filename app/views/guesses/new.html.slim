@@ -6,4 +6,4 @@
     
     / Round Content
     #round-content
-      = render "round_display", round: @round, guess: @guess, game: @game
+      = render "round_display", round: @game.current_round, guess: @guess, game: @game

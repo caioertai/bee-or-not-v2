@@ -1,6 +1,8 @@
 class Game < ApplicationRecord
   has_many :rounds, dependent: :destroy
   has_many :guesses, through: :rounds
+  has_one :current_round, -> { left_joins(:guesses).where(guesses: { id: nil }).order(:created_at) },
+          class_name: "Round", inverse_of: :game
 
   after_create :create_first_round
 
@@ -23,7 +25,7 @@ class Game < ApplicationRecord
   end
 
   def current_round
-    rounds.includes(:guesses).find { |round| !round.completed? } || create_next_round
+    super || create_next_round
   end
 
   private

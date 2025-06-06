@@ -2,13 +2,11 @@ class GuessesController < ApplicationController
   before_action :set_game
 
   def new
-    @round = @game.current_round
-    @guess = @round.guesses.build
+    @guess = @game.current_round.guesses.build
   end
 
   def create
-    @round = @game.current_round
-    @guess = @round.guesses.build(guess_params)
+    @guess = @game.current_round.guesses.build(guess_params)
 
     if @guess.save
       respond_to do |format|
@@ -29,7 +27,7 @@ class GuessesController < ApplicationController
   private
 
   def set_game
-    @game = Game.find(params[:game_id])
+    @game = Game.includes(current_round: [ :headline, :guesses ]).find(params[:game_id])
   end
 
   def guess_params
