@@ -11,4 +11,9 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root "home#index"
+
+  # Game routes with nested guesses (using singular routing)
+  resources :games, only: [ :new, :create, :show ] do
+    resource :guess, only: [ :new, :create ]
+  end
 end

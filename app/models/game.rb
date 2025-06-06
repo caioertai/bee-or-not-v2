@@ -1,0 +1,32 @@
+class Game < ApplicationRecord
+  has_many :rounds, dependent: :destroy
+  has_many :guesses, through: :rounds
+  has_one :current_round, -> { where.missing(:guesses).order(:created_at) }, class_name: "Round", inverse_of: :game
+
+  def total_rounds
+    rounds.joins(:guesses).distinct.count
+  end
+
+  def correct_rounds
+    rounds.joins(guesses: { round: :headline })
+          .where("guesses.real = headlines.real")
+          .distinct.count
+  end
+
+  def score
+    guesses.joins(round: :headline)
+           .where("guesses.real = headlines.real")
+           .count
+  end
+
+  def accuracy_ratio
+    return 0 if total_rounds.zero?
+
+    correct_rounds.to_f / total_rounds
+  end
+
+  def create_next_round!
+    headline = Headline.order("RANDOM()").first
+    self.current_round = rounds.create!(headline: headline)
+  end
+end

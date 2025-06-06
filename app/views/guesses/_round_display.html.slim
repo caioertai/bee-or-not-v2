@@ -1,0 +1,23 @@
+.bg-white.rounded-lg.shadow-lg.p-8
+  .text-center.mb-8
+    h1.text-2xl.font-bold.text-gray-900.mb-4 📰 Headline #{game.total_rounds + 1}
+    p.text-gray-600 Is this headline REAL or FAKE?
+
+  .mb-8.p-6.bg-gray-50.rounded-lg.border-l-4.border-blue-500
+    p.text-lg.leading-relaxed.text-gray-800.font-medium = @game.current_round.headline.content
+
+  .space-y-4
+    = form_with model: [game, guess], url: game_guess_path(game), local: true, data: { turbo: true } do |f|
+      .grid.grid-cols-1.md:grid-cols-2.gap-4
+        = f.button type: :submit, name: "guess[real]", value: true,
+                   class: "w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-lg transition-colors duration-200 text-lg flex items-center justify-center space-x-2" do
+          span.text-2xl ✅
+          span REAL
+
+        = f.button type: :submit, name: "guess[real]", value: false,
+                   class: "w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-6 rounded-lg transition-colors duration-200 text-lg flex items-center justify-center space-x-2" do
+          span.text-2xl ❌
+          span FAKE
+
+  .mt-6.text-center
+    p.text-sm.text-gray-500 Take your time and trust your instincts!

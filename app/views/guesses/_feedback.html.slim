@@ -1,0 +1,36 @@
+.bg-white.rounded-lg.shadow-lg.p-8
+  .text-center.mb-6
+    - if guess.correct?
+      .text-6xl.mb-4 🎉
+      h2.text-3xl.font-bold.text-green-600.mb-2 Correct!
+    - else
+      .text-6xl.mb-4 😔
+      h2.text-3xl.font-bold.text-red-600.mb-2 Wrong!
+    
+    p.text-lg class=guess.result_class = guess.result_text
+  
+  .mb-6.p-6.bg-gray-50.rounded-lg.border-l-4.border-blue-500
+    p.text-lg.leading-relaxed.text-gray-800.font-medium = guess.round.headline.content
+  
+  .mb-6.p-4.bg-blue-50.rounded-lg
+    p.text-sm.text-blue-800
+      strong Your guess: 
+      span = guess.guess_text
+    p.text-sm.text-blue-800.mt-1
+      strong Actual: 
+      = guess.round.headline.real? ? "Real" : "Fake"
+  
+  .mb-6.text-center
+    p.text-sm.text-gray-600.mb-2 Want to learn more?
+    = link_to guess.round.headline.source_url, target: "_blank", 
+              class: "inline-flex items-center space-x-1 text-blue-600 hover:text-blue-800 text-sm font-medium" do
+      span 🔗
+      span View Source
+      span.text-xs ↗
+  
+  .space-y-4
+    = link_to "Next Round", new_game_guess_path(game), 
+              class: "block w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 text-lg text-center"
+    
+    = link_to "View Final Score", game_path(game), 
+              class: "block w-full border-2 border-gray-300 hover:border-gray-400 text-gray-700 font-bold py-3 px-6 rounded-lg transition-colors duration-200 text-center"

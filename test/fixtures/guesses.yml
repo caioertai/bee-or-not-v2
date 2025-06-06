@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+correct_real_guess:
+  round: round_with_correct_guess
+  real: true
+
+incorrect_real_guess:
+  round: round_with_incorrect_guess
+  real: true
+
+correct_fake_guess:
+  round: round_for_completed_game
+  real: false
