@@ -216,6 +216,6 @@ class GameTest < ActiveSupport::TestCase
     join_url = game.join_url
 
     assert_not_nil join_url
-    assert_includes join_url, "games/#{game.id}/join"
+    assert_includes join_url, "games/#{game.id}/players/new"
   end
 end

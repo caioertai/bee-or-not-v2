@@ -42,20 +42,11 @@ class Game < ApplicationRecord
   end
 
   def join_url
-    Rails.application.routes.url_helpers.join_game_url(self, host: Rails.application.config.action_mailer.default_url_options[:host] || "localhost:3000")
+    Rails.application.routes.url_helpers.new_game_player_url(self, host: Rails.application.config.action_mailer.default_url_options[:host] || "localhost:3000")
   end
 
   def qr_code
-    require "rqrcode"
-    qrcode = RQRCode::QRCode.new(join_url)
-    # Safe: This is a self-generated SVG QR code with no user input
-    qrcode.as_svg(
-      color: "000",
-      shape_rendering: "crispEdges",
-      module_size: 6,
-      standalone: true,
-      use_path: true
-    ).html_safe
+    GameQrCode.new(self).svg
   end
 
   def add_player!(player)

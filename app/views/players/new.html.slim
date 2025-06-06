@@ -6,7 +6,7 @@
         h1.text-2xl.font-bold.text-gray-900 Join Game
         .text-sm.text-gray-600.mt-2 You're about to join a multiplayer game!
       
-      = form_with url: join_game_path(@game), method: :post, local: false, 
+      = form_with url: game_players_path(@game), method: :post, local: false, 
                   class: "space-y-4", data: { turbo_stream: true } do |form|
         .space-y-4
           .text-center

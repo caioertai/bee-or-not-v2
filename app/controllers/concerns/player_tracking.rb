@@ -8,10 +8,10 @@ module PlayerTracking
   private
 
   def current_player
-    @current_player ||= find_or_create_player
+    @current_player ||= find_or_create_player_from_cookie
   end
 
-  def find_or_create_player
+  def find_or_create_player_from_cookie
     player_uuid = cookies[:player_uuid]
 
     if player_uuid.present?
@@ -19,19 +19,13 @@ module PlayerTracking
       return player if player
     end
 
-    create_new_player
-  end
-
-  def create_new_player
-    player = Player.create!(name: generate_random_name)
+    # Create new player with UUID and set cookie
+    player = Player.create!(
+      uuid: SecureRandom.uuid,
+      name: RandomNameGenerator.generate
+    )
     cookies[:player_uuid] = { value: player.uuid, expires: 30.days.from_now }
     player
-  end
-
-  def generate_random_name
-    adjectives = %w[Swift Clever Bold Bright Quick Sharp Wise Cool Smart Fast]
-    animals = %w[Fox Wolf Eagle Tiger Bear Lion Hawk Lynx Owl Falcon]
-    "#{adjectives.sample} #{animals.sample} #{rand(100..999)}"
   end
 
   def ensure_current_player

@@ -21,9 +21,10 @@ class PlayerTest < ActiveSupport::TestCase
     assert_includes player.errors[:uuid], "has already been taken"
   end
 
-  test "uuid is generated automatically on create" do
-    player = Player.create!(name: "Test Player")
+  test "can create player with uuid and name" do
+    player = Player.create!(uuid: SecureRandom.uuid, name: "Test Player")
     assert_not_nil player.uuid
+    assert_equal "Test Player", player.name
     assert_match(/\A[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\z/, player.uuid)
   end
 

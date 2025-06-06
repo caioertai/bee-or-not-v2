@@ -15,9 +15,6 @@ Rails.application.routes.draw do
   # Game routes with nested guesses (using singular routing)
   resources :games, only: [ :new, :create, :show ] do
     resource :guess, only: [ :new, :create ]
-    member do
-      get :join
-      post :join, action: :join_game
-    end
+    resources :players, only: [ :new, :create ]
   end
 end

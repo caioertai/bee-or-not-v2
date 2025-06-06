@@ -24,7 +24,7 @@ class GamePlayerTest < ActiveSupport::TestCase
 
   test "allows different players in same game" do
     game = games(:one)
-    new_player = Player.create!(name: "Charlie Brown")
+    new_player = Player.create!(uuid: SecureRandom.uuid, name: "Charlie Brown")
     game_player = GamePlayer.new(game: game, player: new_player)
     assert game_player.valid?
   end
