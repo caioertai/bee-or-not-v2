@@ -1,47 +1,47 @@
-.bg-white.rounded-lg.shadow-lg.p-8
+.bg-white.dark:bg-gray-800.rounded-lg.shadow-lg.p-8.transition-colors.duration-300
   .text-center.mb-6
     - if guess.correct?
       .text-6xl.mb-4 🎉
-      h2.text-3xl.font-bold.text-green-600.mb-2 Correct!
+      h2.text-3xl.font-bold.text-green-600.dark:text-green-400.mb-2 Correct!
     - else
       .text-6xl.mb-4 😔
-      h2.text-3xl.font-bold.text-red-600.mb-2 Wrong!
+      h2.text-3xl.font-bold.text-red-600.dark:text-red-400.mb-2 Wrong!
     
     p.text-lg class=guess.result_class = guess.result_text
   
-  .mb-6.p-6.bg-gray-50.rounded-lg.border-l-4.border-blue-500
-    p.text-lg.leading-relaxed.text-gray-800.font-medium = guess.round.headline.content
+  .mb-6.p-6.bg-gray-50.dark:bg-gray-700.rounded-lg.border-l-4.border-blue-500.dark:border-blue-400.transition-colors.duration-300
+    p.text-lg.leading-relaxed.text-gray-800.dark:text-gray-200.font-medium = guess.round.headline.content
   
-  .mb-6.p-4.bg-blue-50.rounded-lg
-    p.text-sm.text-blue-800
+  .mb-6.p-4.bg-blue-50.dark:bg-blue-900/30.rounded-lg.transition-colors.duration-300
+    p.text-sm.text-blue-800.dark:text-blue-300
       strong Your guess: 
       span = guess.guess_text
-    p.text-sm.text-blue-800.mt-1
+    p.text-sm.text-blue-800.dark:text-blue-300.mt-1
       strong Actual: 
       = guess.round.headline.real? ? "Real" : "Fake"
   
   .mb-6.text-center
-    p.text-sm.text-gray-600.mb-2 Want to learn more?
+    p.text-sm.text-gray-600.dark:text-gray-400.mb-2 Want to learn more?
     = link_to guess.round.headline.source_url, target: "_blank", 
-              class: "inline-flex items-center space-x-1 text-blue-600 hover:text-blue-800 text-sm font-medium" do
+              class: "inline-flex items-center space-x-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm font-medium" do
       span 🔗
       span View Source
       span.text-xs ↗
   
   - if guess.game.completed?
-    .mb-6.p-6.bg-yellow-50.rounded-lg.border-l-4.border-yellow-500
+    .mb-6.p-6.bg-yellow-50.dark:bg-yellow-900/30.rounded-lg.border-l-4.border-yellow-500.dark:border-yellow-400.transition-colors.duration-300
       .text-center
         .text-4xl.mb-3 🏆
-        h3.text-xl.font-bold.text-yellow-800.mb-2 No more headlines left!
-        p.text-yellow-700 Thanks for playing!
+        h3.text-xl.font-bold.text-yellow-800.dark:text-yellow-200.mb-2 No more headlines left!
+        p.text-yellow-700.dark:text-yellow-300 Thanks for playing!
     
     .space-y-4
       = link_to "View Final Score", game_path(guess.game), 
-                class: "block w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 text-lg text-center"
+                class: "block w-full bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 text-lg text-center"
   - else
     .space-y-4
       = link_to "Next Round", new_game_guess_path(guess.game), 
-                class: "block w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 text-lg text-center"
+                class: "block w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 text-lg text-center"
       
       = link_to "View Final Score", game_path(guess.game), 
-                class: "block w-full border-2 border-gray-300 hover:border-gray-400 text-gray-700 font-bold py-3 px-6 rounded-lg transition-colors duration-200 text-center"
+                class: "block w-full border-2 border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 text-gray-700 dark:text-gray-300 font-bold py-3 px-6 rounded-lg transition-colors duration-200 text-center"

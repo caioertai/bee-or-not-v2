@@ -16,6 +16,7 @@ Players are presented with headlines and must decide whether they're REAL (from 
 - **Performance Metrics**: Motivational feedback based on accuracy percentage
 - **Smart Headline Management**: No headline repetition within games, natural completion when exhausted
 - **Optimized Performance**: Subquery-based headline selection for scalable gameplay
+- **Dark Mode Support**: Toggleable dark/light theme with persistent user preference
 
 ## 🛠️ Technical Stack
 
@@ -135,12 +136,23 @@ kamal deploy
 - [x] **~~Fix Source URLs~~**: ✅ Implemented source_url database field with proper validation
 - [x] **~~Source Management~~**: ✅ Added Source model with proper associations and constraints
 - [x] **~~Automated Content~~**: ✅ Babylon Bee and Not the Bee scrapers for fresh headlines
+- [x] **~~Dark Mode~~**: ✅ Implemented toggleable dark/light theme with localStorage persistence
 
 ### Near-term Improvements
 
+#### Scraper Quality & Reliability
+- [ ] **Scraper Constants**: Extract hardcoded values (pagination size: 12, category: "latest") to class constants  
+- [ ] **HTTP Timeouts**: Add configurable timeout settings for scraper network requests
+- [ ] **Rate Limiting**: Implement configurable delays between scraper requests to be respectful to servers
+- [ ] **Enhanced Scraper Logging**: Add info-level logs for successful scraper operations
 - [ ] **Scraper Resilience**: Add retry logic and better error handling for API changes
-- [ ] **Rate Limiting**: Implement delays and respect robots.txt for scraping
-- [ ] **More News Sources**: Add scrapers for additional real news sources (BBC, CNN, etc.)
+
+#### Content & Sources
+- [ ] **More News Sources**: Add scrapers for additional real news sources (BBC, CNN, etc.) for source diversity
+- [ ] **Content Quality Monitoring**: Track Not the Bee headline quality to ensure game balance
+- [ ] **API Change Detection**: Monitor for structural changes in scraper target APIs
+
+#### Technical Infrastructure  
 - [ ] **Background Processing**: Move scraping to async jobs with Sidekiq
 - [ ] **Database Constraints**: Add check constraints for content length validation
 - [ ] **Improve Error Handling**: Add proper 404 pages and error recovery
@@ -152,6 +164,8 @@ kamal deploy
 - [ ] **Score Calculation Caching**: Implement caching for expensive aggregation queries
 - [ ] **Database Pagination**: Add pagination for large headline datasets
 - [ ] **Scraper Monitoring**: Add health checks and alerting for scraper failures
+- [ ] **Content Quality Monitoring**: Track Not the Bee headline quality for game balance
+- [ ] **API Change Detection**: Monitor for structural changes in scraper target APIs
 - [ ] **Database Indexes**: Optimize queries with proper indexing strategy
 
 ### Game Features
@@ -169,11 +183,13 @@ kamal deploy
 - [ ] **Social Features**: Share scores, challenge friends, compete in tournaments
 - [ ] **Enhanced Feedback**: More detailed explanations for why headlines are real/fake
 - [ ] **Accessibility Improvements**: Better keyboard navigation and screen reader support
+- [ ] **Theme Customization**: Expand dark mode with multiple theme options and system preference detection
 
 ### Technical Enhancements
 
 - [ ] **Scraper Configuration**: Move hardcoded URLs to Rails configuration files
-- [ ] **API Monitoring**: Track Babylon Bee API changes and health
+- [ ] **Enhanced Scraper Logging**: Add info-level logs for successful scraper operations
+- [ ] **API Monitoring**: Track Babylon Bee and Not the Bee API changes and health
 - [ ] **Real-time Multiplayer**: WebSocket-based multiplayer games
 - [ ] **Mobile App**: React Native or PWA implementation
 - [ ] **Analytics Integration**: Track user behavior and headline effectiveness

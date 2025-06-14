@@ -1,26 +1,26 @@
-.min-h-screen.bg-gradient-to-br.from-blue-50.to-indigo-100.flex.items-center.justify-center.px-4
+.min-h-screen.bg-gradient-to-br.from-blue-50.to-indigo-100.dark:from-gray-900.dark:to-gray-800.flex.items-center.justify-center.px-4.transition-colors.duration-300
   .max-w-lg.mx-auto.text-center
-    .bg-white.rounded-lg.shadow-lg.p-8
-      h1.text-3xl.font-bold.text-gray-900.mb-6 🐝 Ready to Play?
+    .bg-white.dark:bg-gray-800.rounded-lg.shadow-lg.p-8.transition-colors.duration-300
+      h1.text-3xl.font-bold.text-gray-900.dark:text-white.mb-6 🐝 Ready to Play?
       
       .mb-6
-        h2.text-xl.font-semibold.text-gray-800.mb-4 How to Play:
-        ul.text-left.text-gray-600.space-y-2
+        h2.text-xl.font-semibold.text-gray-800.dark:text-gray-200.mb-4 How to Play:
+        ul.text-left.text-gray-600.dark:text-gray-300.space-y-2
           li.flex.items-start
-            span.text-blue-600.mr-2 •
+            span.text-blue-600.dark:text-blue-400.mr-2 •
             | Read each headline carefully
           li.flex.items-start
-            span.text-blue-600.mr-2 •
+            span.text-blue-600.dark:text-blue-400.mr-2 •
             | Decide if it's REAL or FAKE
           li.flex.items-start
-            span.text-blue-600.mr-2 •
+            span.text-blue-600.dark:text-blue-400.mr-2 •
             | See how well you can spot the difference!
       
-      .mb-6.p-4.bg-blue-50.rounded-lg
-        p.text-sm.text-blue-800 💡 Tip: Look for overly sensational language or claims that seem too good (or bad) to be true!
+      .mb-6.p-4.bg-blue-50.dark:bg-blue-900/30.rounded-lg.transition-colors.duration-300
+        p.text-sm.text-blue-800.dark:text-blue-300 💡 Tip: Look for overly sensational language or claims that seem too good (or bad) to be true!
       
       = form_with url: games_path, local: true, method: :post do |f|
-        = f.submit "Start Game", class: "w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 text-lg"
+        = f.submit "Start Game", class: "w-full bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 text-lg"
       
       .mt-4
-        = link_to "← Back to Home", root_path, class: "text-blue-600 hover:text-blue-800 text-sm"
+        = link_to "← Back to Home", root_path, class: "text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm"
