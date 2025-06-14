@@ -21,10 +21,10 @@ html
     = stylesheet_link_tag :app, "data-turbo-track": "reload"
     = javascript_importmap_tags
 
-  body.bg-white.dark:bg-gray-900.transition-colors.duration-300
+  body.bg-white.dark:bg-gray-900.transition-colors.duration-300 data-controller="dark-mode"
     / Dark mode toggle button
     .fixed.top-4.right-4.z-50
-      button#dark-mode-toggle.p-2.bg-gray-200.dark:bg-gray-700.hover:bg-gray-300.dark:hover:bg-gray-600.rounded-full.transition-colors.duration-200
+      button.p-2.bg-gray-200.dark:bg-gray-700.hover:bg-gray-300.dark:hover:bg-gray-600.rounded-full.transition-colors.duration-200 data-action="click->dark-mode#toggle"
         span.dark:hidden 🌙
         span.hidden.dark:inline ☀️
     
